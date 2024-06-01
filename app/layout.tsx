@@ -18,16 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="bg-background text-foreground">
+      <body className="bg-slate-700 text-foreground text-white">
         <nav className="w-full bg-slate-900 flex py-4 px-10">
           <div className="w-full max-w-screen-xl mx-auto flex text-white">
             <div className="grow">Squid</div>
             <div>Login?</div>
           </div>
         </nav>
-        <main className="min-h-screen flex flex-col items-center">
-          {children}
-        </main>
+        <main className="w-full max-w-screen-xl mx-auto">{children}</main>
       </body>
     </html>
   );
