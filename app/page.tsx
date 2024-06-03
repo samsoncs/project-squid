@@ -1,54 +1,159 @@
-import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
-import { createClient } from "@/utils/supabase/server";
-import ConnectSupabaseSteps from "@/components/tutorial/ConnectSupabaseSteps";
-import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
-import Header from "@/components/Header";
+"use client";
 
-export default async function Index() {
-  const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
-    try {
-      createClient();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
-  const isSupabaseConnected = canInitSupabaseClient();
+const Check = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    className="h-8 w-8 text-green-500"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+    />
+  </svg>
+);
 
+const games = [{}, {}, {}];
+
+const completed = [{}, {}, {}];
+
+const Card: React.FC<{ children: React.ReactElement }> = ({ children }) => (
+  <div className="bg-neutral-600 rounded-md p-2">{children}</div>
+);
+
+const Header3: React.FC<{ title: string }> = ({ title }) => (
+  <h3 className="text-2xl py-4">{title}</h3>
+);
+
+type TeamScore = {
+  team: string;
+  score: number;
+  rank: number;
+  firstPlaces: number[];
+  secondPlaces: number[];
+  thirdPlaces: number[];
+};
+
+const leaderBoard: TeamScore[] = [
+  {
+    team: "Team Gangbu",
+    score: 12,
+    rank: 2,
+    firstPlaces: [],
+    secondPlaces: [],
+    thirdPlaces: [],
+  },
+  {
+    team: "Team Chang",
+    score: 16,
+    rank: 1,
+    firstPlaces: [],
+    secondPlaces: [],
+    thirdPlaces: [],
+  },
+  {
+    team: "Team Badass",
+    score: 11,
+    rank: 3,
+    firstPlaces: [],
+    secondPlaces: [],
+    thirdPlaces: [],
+  },
+];
+
+const Leaderboard = () => (
+  <div>
+    <Header3 title="Leaderboards" />
+
+    <div className="flex flex-col gap-2">
+      {leaderBoard.map((l) => (
+        <Card>
+          <div className="flex justify-between gap-6">
+            <div> {l.rank}</div>
+            <div className="grow">{l.team}</div>
+            <div> {l.score}</div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const Games = () => (
+  <div>
+    <Header3 title="Upcoming" />
+
+    <div className="flex flex-col gap-2 mb-6">
+      {games.map((g) => (
+        <Card>
+          <div className="flex">
+            <div className="p-4 text-4xl">1</div>
+            <div className="p-4 grow">The Cookie Cutter</div>
+            {/* <div className="p-4">
+              <Check />
+            </div> */}
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    <Header3 title="Completed" />
+
+    <div className="flex flex-col gap-2 mb-4">
+      {completed.map((g) => (
+        <Card>
+          <div className="flex items-center gap-2 p-4 px-1">
+            <div className="">
+              <Check />
+            </div>
+            <div className="text-4xl">1</div>
+            <div className="grow">The Cookie Cutter</div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const Index = () => {
+  const pathname = usePathname();
+  const [currentTab, setCurrentTab] = useState<"games" | "leaderboard">(
+    "games"
+  );
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-        <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-          <DeployButton />
-          {isSupabaseConnected && <AuthButton />}
+    <div>
+      <div className="flex justify-center">
+        <div className="p-1.5 rounded-lg bg-neutral-700">
+          <button
+            className={`min-w-24 p-2 rounded-lg ${
+              currentTab === "games" ? "bg-neutral-600" : ""
+            }`}
+            onClick={() => setCurrentTab("games")}
+          >
+            Games
+          </button>
+          <button
+            className={`min-w-24 p-2 rounded-lg ${
+              currentTab === "leaderboard" ? "bg-neutral-600" : ""
+            }`}
+            onClick={() => setCurrentTab("leaderboard")}
+          >
+            Leaderboard
+          </button>
         </div>
-      </nav>
-
-      <div className="animate-in flex-1 flex flex-col gap-20 opacity-0 max-w-4xl px-3">
-        <Header />
-        <main className="flex-1 flex flex-col gap-6">
-          <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          {isSupabaseConnected ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-        </main>
       </div>
 
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
-        <p>
-          Powered by{" "}
-          <a
-            href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-            target="_blank"
-            className="font-bold hover:underline"
-            rel="noreferrer"
-          >
-            Supabase
-          </a>
-        </p>
-      </footer>
+      <div>{currentTab === "games" && <Games />}</div>
+      <div>{currentTab === "leaderboard" && <Leaderboard />}</div>
     </div>
   );
-}
+};
+
+export default Index;
