@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 const Check = () => (
   <svg
@@ -91,13 +91,16 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   </div>
 );
 
+const fetcher = (url: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
+    res.json()
+  );
+
 const Leaderboard = () => {
-  useEffect(() => {
-    console.log(process.env.SERVER_URL);
-    fetch(" http://127.0.0.1:54321/functions/v1/leaderboard-and-games")
-      .then((r) => r.json())
-      .then((r) => console.log(r));
-  }, []);
+  const { data, isLoading, error } = useSWR(
+    "v1/leaderboard-and-games",
+    fetcher
+  );
 
   return (
     <div>
