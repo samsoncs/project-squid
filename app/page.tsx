@@ -1,7 +1,7 @@
 "use client";
-
 import { usePathname } from "next/navigation";
-import useSWR from "swr";
+import { useState } from "react";
+import useSWR, { Fetcher } from "swr";
 
 const Check = () => (
   <svg
@@ -29,7 +29,7 @@ const Header3: React.FC<{ title: string }> = ({ title }) => (
 );
 
 type TeamScore = {
-  team: string;
+  teamName: string;
   score: number;
   rank: number;
   firstPlaces: number;
@@ -40,7 +40,7 @@ type TeamScore = {
 
 const leaderBoard: TeamScore[] = [
   {
-    team: "Team Gangbu",
+    teamName: "Team Gangbu",
     score: 16,
     rank: 1,
     firstPlaces: 5,
@@ -49,7 +49,7 @@ const leaderBoard: TeamScore[] = [
     usedTokens: 2,
   },
   {
-    team: "Team Chang",
+    teamName: "Team Chang",
     score: 12,
     rank: 2,
     firstPlaces: 2,
@@ -58,7 +58,7 @@ const leaderBoard: TeamScore[] = [
     usedTokens: 0,
   },
   {
-    team: "Team Badass",
+    teamName: "Team Badass",
     score: 11,
     rank: 3,
     firstPlaces: 0,
@@ -91,16 +91,21 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   </div>
 );
 
-const fetcher = (url: string) =>
+const fetcher: Fetcher<TeamScore[], string> = (url: string) =>
   fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
     res.json()
   );
 
 const Leaderboard = () => {
-  const { data, isLoading, error } = useSWR(
-    "v1/leaderboard-and-games",
-    fetcher
-  );
+  const { data, isLoading, error } = useSWR("v1/squid-games", fetcher);
+
+  if (isLoading) {
+    return <>Loaring</>;
+  }
+
+  if (error) {
+    return <>Someting went wrone</>;
+  }
 
   return (
     <div>
@@ -114,47 +119,52 @@ const Leaderboard = () => {
           <div className="col-span-2 flex justify-end">Points</div>
         </div>
 
-        {leaderBoard.map((l) => (
-          <Card>
-            <div className="grid grid-cols-12 px-4">
-              <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
-                <div>{l.rank}</div>
-              </div>
-              <div className="col-span-8 flex flex-col gap-2">
-                <div className="text-md font-bold">{l.team}</div>
-                <div className="flex gap-1 flex-wrap">
-                  {[...Array(l.firstPlaces)].map((_) => (
-                    <Medal
-                      pos={1}
-                      textColor="text-cyan-500"
-                      color="border-cyan-500"
-                    />
-                  ))}
-                  {[...Array(l.secondPlaces)].map((_) => (
-                    <Medal
-                      pos={2}
-                      textColor="text-pink-500"
-                      color="border-pink-500"
-                    />
-                  ))}
-                  {[...Array(l.thirdPlaces)].map((_) => (
-                    <Medal
-                      pos={3}
-                      textColor="text-zinc-400"
-                      color="border-zinc-400"
-                    />
-                  ))}
-                  {[...Array(l.usedTokens)].map((_) => (
-                    <Token textColor="text-zinc-100" color="border-zinc-800" />
-                  ))}
+        {data!
+          .sort((a, b) => a.score - b.score)
+          .map((r, idx) => (
+            <Card>
+              <div className="grid grid-cols-12 px-4">
+                <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
+                  <div>{idx + 1}</div>
+                </div>
+                <div className="col-span-8 flex flex-col gap-2">
+                  <div className="text-md font-bold">{r.teamName}</div>
+                  <div className="flex gap-1 flex-wrap">
+                    {[...Array(r.firstPlaces)].map((_) => (
+                      <Medal
+                        pos={1}
+                        textColor="text-cyan-500"
+                        color="border-cyan-500"
+                      />
+                    ))}
+                    {[...Array(r.secondPlaces)].map((_) => (
+                      <Medal
+                        pos={2}
+                        textColor="text-pink-500"
+                        color="border-pink-500"
+                      />
+                    ))}
+                    {[...Array(r.thirdPlaces)].map((_) => (
+                      <Medal
+                        pos={3}
+                        textColor="text-zinc-400"
+                        color="border-zinc-400"
+                      />
+                    ))}
+                    {[...Array(r.usedTokens)].map((_) => (
+                      <Token
+                        textColor="text-zinc-100"
+                        color="border-zinc-800"
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="col-span-2 font-bold flex justify-end items-center">
+                  <div> {r.score}</div>
                 </div>
               </div>
-              <div className="col-span-2 font-bold flex justify-end items-center">
-                <div> {l.score}</div>
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
       </div>
     </div>
   );

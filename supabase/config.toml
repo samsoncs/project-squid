@@ -15,7 +15,7 @@ extra_search_path = ["public", "extensions"]
 # for accidental or malicious requests.
 max_rows = 1000
 
-[functions.leaderboard-and-games]
+[functions.squid-games]
 verify_jwt = false
 
 [db]
