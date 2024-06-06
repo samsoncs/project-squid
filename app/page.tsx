@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Check = () => (
   <svg
@@ -91,62 +91,71 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   </div>
 );
 
-const Leaderboard = () => (
-  <div>
-    <div className="px-2">
-      <Header3 title="Leaderboard" />
-    </div>
-    <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-12 px-2 text-sm font-bold">
-        <div className="col-span-2">Rank</div>
-        <div className="col-span-8">Team</div>
-        <div className="col-span-2 flex justify-end">Points</div>
-      </div>
+const Leaderboard = () => {
+  useEffect(() => {
+    console.log(process.env.SERVER_URL);
+    fetch(" http://127.0.0.1:54321/functions/v1/leaderboard-and-games")
+      .then((r) => r.json())
+      .then((r) => console.log(r));
+  }, []);
 
-      {leaderBoard.map((l) => (
-        <Card>
-          <div className="grid grid-cols-12 px-4">
-            <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
-              <div>{l.rank}</div>
-            </div>
-            <div className="col-span-8 flex flex-col gap-2">
-              <div className="text-md font-bold">{l.team}</div>
-              <div className="flex gap-1 flex-wrap">
-                {[...Array(l.firstPlaces)].map((_) => (
-                  <Medal
-                    pos={1}
-                    textColor="text-cyan-500"
-                    color="border-cyan-500"
-                  />
-                ))}
-                {[...Array(l.secondPlaces)].map((_) => (
-                  <Medal
-                    pos={2}
-                    textColor="text-pink-500"
-                    color="border-pink-500"
-                  />
-                ))}
-                {[...Array(l.thirdPlaces)].map((_) => (
-                  <Medal
-                    pos={3}
-                    textColor="text-zinc-400"
-                    color="border-zinc-400"
-                  />
-                ))}
-                {[...Array(l.usedTokens)].map((_) => (
-                  <Token textColor="text-zinc-100" color="border-zinc-800" />
-                ))}
+  return (
+    <div>
+      <div className="px-2">
+        <Header3 title="Leaderboard" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-12 px-2 text-sm font-bold">
+          <div className="col-span-2">Rank</div>
+          <div className="col-span-8">Team</div>
+          <div className="col-span-2 flex justify-end">Points</div>
+        </div>
+
+        {leaderBoard.map((l) => (
+          <Card>
+            <div className="grid grid-cols-12 px-4">
+              <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
+                <div>{l.rank}</div>
+              </div>
+              <div className="col-span-8 flex flex-col gap-2">
+                <div className="text-md font-bold">{l.team}</div>
+                <div className="flex gap-1 flex-wrap">
+                  {[...Array(l.firstPlaces)].map((_) => (
+                    <Medal
+                      pos={1}
+                      textColor="text-cyan-500"
+                      color="border-cyan-500"
+                    />
+                  ))}
+                  {[...Array(l.secondPlaces)].map((_) => (
+                    <Medal
+                      pos={2}
+                      textColor="text-pink-500"
+                      color="border-pink-500"
+                    />
+                  ))}
+                  {[...Array(l.thirdPlaces)].map((_) => (
+                    <Medal
+                      pos={3}
+                      textColor="text-zinc-400"
+                      color="border-zinc-400"
+                    />
+                  ))}
+                  {[...Array(l.usedTokens)].map((_) => (
+                    <Token textColor="text-zinc-100" color="border-zinc-800" />
+                  ))}
+                </div>
+              </div>
+              <div className="col-span-2 font-bold flex justify-end items-center">
+                <div> {l.score}</div>
               </div>
             </div>
-            <div className="col-span-2 font-bold flex justify-end items-center">
-              <div> {l.score}</div>
-            </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Triangle = () => (
   <svg

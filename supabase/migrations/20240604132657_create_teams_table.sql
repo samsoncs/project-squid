@@ -1,4 +1,4 @@
-CREATE TABLE Team(
-    Id bigint primary key not null,
-    Name varchar(100)
+CREATE TABLE team(
+    team_id bigint primary key not null,
+    name varchar(100)
 )
