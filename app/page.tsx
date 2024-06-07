@@ -74,7 +74,7 @@ const Medal: React.FC<{ color: string; textColor: string; pos: number }> = ({
   textColor,
 }) => (
   <div
-    className={`rounded-full border-2 text-sm ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
+    className={`rounded-full pr-[1px] border-2 text-sm ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
   >
     {pos}
   </div>
@@ -91,7 +91,7 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   </div>
 );
 
-const fetcher: Fetcher<TeamScore[], string> = (url: string) =>
+const leaderboardFetcher: Fetcher<TeamScore[], string> = (url: string) =>
   fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
     res.json()
   );
@@ -99,7 +99,7 @@ const fetcher: Fetcher<TeamScore[], string> = (url: string) =>
 const Leaderboard = () => {
   const { data, isLoading, error } = useSWR(
     "v1/squid-games/leaderboard",
-    fetcher
+    leaderboardFetcher
   );
 
   if (isLoading) {
@@ -122,7 +122,7 @@ const Leaderboard = () => {
           <div className="col-span-2 flex justify-end">Points</div>
         </div>
         {data!
-          .sort((a, b) => a.score - b.score)
+          .sort((a, b) => b.score - a.score)
           .map((r, idx) => (
             <Card>
               <div className="grid grid-cols-12 px-4">
@@ -215,86 +215,37 @@ const Circle = () => (
 );
 
 type Game = {
-  title: string;
-  token?: "triangle" | "square" | "circle";
+  gameName: string;
   order: number;
+  isSquidGame: boolean;
+  firstPlace?: string;
+  secondPlace?: string;
+  thirdPlace?: string;
+  squidTokenUsed: string;
 };
 
-const upcoming: Game[] = [
-  {
-    title: "The Cookie Cutter",
-    order: 5,
-  },
-  {
-    title: "The Cookie Cutter",
-    token: "triangle",
-    order: 6,
-  },
-  {
-    title: "The Cookie Cutter",
-    order: 7,
-  },
-  {
-    title: "The Cookie Cutter",
-    order: 8,
-  },
-  {
-    title: "The Cookie Cutter",
-    token: "square",
-    order: 9,
-  },
-];
-
-type CompletedGame = {
-  title: string;
-  tokenUsed?: "triangle" | "square" | "circle";
-  order: number;
-  winner: string;
-  second: string;
-  third: string;
+type Games = {
+  upcoming: Game[];
+  completed: Game[];
 };
 
-const completed: CompletedGame[] = [
-  {
-    title: "The Cookie Cutter",
-    order: 4,
-    winner: "Team Gangbu",
-    second: "Team Cookie",
-    third: "Team Awesome",
-  },
-  {
-    title: "The Cookie Cutter",
-    tokenUsed: "triangle",
-    order: 3,
-    winner: "Team Gangbu",
-    second: "Team Cookie",
-    third: "Team Awesome",
-  },
-  {
-    title: "The Cookie Cutter",
-    order: 2,
-    winner: "Team Gangbu",
-    second: "Team Cookie",
-    third: "Team Awesome",
-  },
-  {
-    title: "The Cookie Cutter",
-    order: 1,
-    winner: "Team Gangbu",
-    second: "Team Cookie",
-    third: "Team Awesome",
-  },
-];
+const gamesFetcher: Fetcher<Games, string> = (url: string) =>
+  fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
+    res.json()
+  );
 
 const Games = () => {
-  const { data, isLoading, error } = useSWR("v1/squid-games/games", fetcher);
+  const { data, isLoading, error } = useSWR(
+    "v1/squid-games/games",
+    gamesFetcher
+  );
 
   if (isLoading) {
-    return <>Loaring</>;
+    return <>Loading</>;
   }
 
   if (error) {
-    return <>Someting went wrong</>;
+    return <>Something went wrong</>;
   }
 
   return (
@@ -304,19 +255,25 @@ const Games = () => {
       </div>
 
       <div className="flex flex-col gap-2 mb-6">
-        {upcoming.map((u) => (
+        <div className="grid grid-cols-12 px-2 text-sm font-bold">
+          <div className="col-span-2">Order</div>
+          <div className="col-span-8">Game</div>
+          <div className="col-span-2 flex justify-end">Squid</div>
+        </div>
+        {data!.upcoming.map((u) => (
           <Card>
             <div className="grid grid-cols-12 px-4">
               <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
                 <div>{u.order}</div>
               </div>
               <div className="col-span-7 flex items-center text-md font-bold">
-                {u.title}
+                {u.gameName}
               </div>
               <div className="col-span-3 flex justify-end">
-                {u.token === "circle" && <Circle />}
+                {u.isSquidGame && <Square />}
+                {/* {u.token === "circle" && <Circle />}
                 {u.token === "square" && <Square />}
-                {u.token === "triangle" && <Triangle />}
+                {u.token === "triangle" && <Triangle />} */}
               </div>
             </div>
           </Card>
@@ -328,23 +285,28 @@ const Games = () => {
       </div>
 
       <div className="flex flex-col gap-2 mb-4">
-        {completed.map((g) => (
+        <div className="grid grid-cols-12 px-2 text-sm font-bold">
+          <div className="col-span-2">Order</div>
+          <div className="col-span-8">Game</div>
+          <div className="col-span-2 flex justify-end">Completed</div>
+        </div>
+        {data!.completed.map((g) => (
           <Card>
             <div className="grid grid-cols-12 px-4">
               <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
                 <div>{g.order}</div>
               </div>
               <div className="col-span-7 flex flex-col">
-                <div className="mb-1 text-md font-bold">{g.title}</div>
+                <div className="mb-1 text-md font-bold">{g.gameName}</div>
                 <div className="text-sm flex flex-col justify-center gap-.5 text-zinc-400">
-                  {g.tokenUsed && (
-                    <Token textColor="text-zinc-100" color="border-zinc-800" />
+                  {g.squidTokenUsed && (
+                    <div className="flex">Squid token used</div>
                   )}
-                  {!g.tokenUsed && (
+                  {!g.squidTokenUsed && (
                     <>
-                      <div>1. {g.winner}</div>
-                      <div>2. {g.second}</div>
-                      <div>3. {g.third}</div>
+                      <div>1. {g.firstPlace}</div>
+                      <div>2. {g.secondPlace}</div>
+                      <div>3. {g.thirdPlace}</div>
                     </>
                   )}
                 </div>

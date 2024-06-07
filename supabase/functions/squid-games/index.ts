@@ -9,20 +9,19 @@ async function getLeaderboard(req: Request, supabase: SupabaseClient): Promise<R
   const { data, error } = await supabase.rpc('get_leaderboard')
 
   const resultsByTeamName = Object.groupBy(data, f => f.team_name)
-
   const keys = Object.keys(resultsByTeamName).filter(k => k !== "null");
 
   const result = keys.map(k => ({
     teamName: k,
-    score: resultsByTeamName[k].reduce((a, b) => a + (keys.length - b.place), 0),
+    score: resultsByTeamName[k].reduce((a, b) => a + ((!b.squid_token_used ? (keys.length - b.place) : 0)), 0),
     firstPlaces: resultsByTeamName[k]
-    .filter(r => r.place === 1)
+    .filter(r => r.place === 1 && !r.squid_token_used)
     .length,
     secondPlaces: resultsByTeamName[k]
-    .filter(r => r.place === 2)
+    .filter(r => r.place === 2 && !r.squid_token_used)
     .length,
     thirdPlaces: resultsByTeamName[k]
-    .filter(r => r.place === 3)
+    .filter(r => r.place === 3 && !r.squid_token_used)
     .length,
     squidTokensUsed: resultsByTeamName[k]
     .filter(r => r.squid_token_used)
@@ -42,7 +41,26 @@ async function getLeaderboard(req: Request, supabase: SupabaseClient): Promise<R
 async function getGames(req: Request, supabase: SupabaseClient): Promise<Response> {
   const { data, error } = await supabase.rpc('get_leaderboard')
 
-  return new Response(JSON.stringify("games"), {
+  const resultsByGame = Object.groupBy(data, f => f.game_name)
+  const keys = Object.keys(resultsByGame).filter(k => k !== "null");
+  const result = {
+    completed: keys.filter(k => resultsByGame[k][0].completed).map(k => ({
+      gameName: k,
+      order:  resultsByGame[k][0].game_id,
+      isSquidGame: resultsByGame[k][0].is_squid_game,
+      firstPlace: !resultsByGame[k][0].squid_token_used ? resultsByGame[k].find(g => g.place === 1).team_name : null,
+      secondPlace: !resultsByGame[k][0].squid_token_used ? resultsByGame[k].find(g => g.place === 2).team_name : null,
+      thirdPlace: !resultsByGame[k][0].squid_token_used ? resultsByGame[k].find(g => g.place === 3).team_name : null,
+      squidTokenUsed: resultsByGame[k][0].squid_token_used
+    })),
+    upcoming: keys.filter(k => !resultsByGame[k][0].completed).map(k => ({
+      gameName: k,
+      order:  resultsByGame[k][0].game_id,
+      isSquidGame: resultsByGame[k][0].is_squid_game,
+    }))
+  }
+
+  return new Response(JSON.stringify(result), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     status: 200,
   })
