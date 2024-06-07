@@ -97,14 +97,17 @@ const fetcher: Fetcher<TeamScore[], string> = (url: string) =>
   );
 
 const Leaderboard = () => {
-  const { data, isLoading, error } = useSWR("v1/squid-games", fetcher);
+  const { data, isLoading, error } = useSWR(
+    "v1/squid-games/leaderboard",
+    fetcher
+  );
 
   if (isLoading) {
     return <>Loaring</>;
   }
 
   if (error) {
-    return <>Someting went wrone</>;
+    return <>Someting went wrong</>;
   }
 
   return (
@@ -118,7 +121,6 @@ const Leaderboard = () => {
           <div className="col-span-8">Team</div>
           <div className="col-span-2 flex justify-end">Points</div>
         </div>
-
         {data!
           .sort((a, b) => a.score - b.score)
           .map((r, idx) => (
@@ -181,7 +183,7 @@ const Triangle = () => (
   >
     <path
       d="M28.1651 3.75L48.9497 39.75C49.9119 41.4167 48.7091 43.5 46.7846 43.5H5.21538C3.29089 43.5 2.08807 41.4167 3.05033 39.75L23.8349 3.74999C24.7972 2.08333 27.2028 2.08333 28.1651 3.75Z"
-      stroke-width="5"
+      strokeWidth="5"
     />
   </svg>
 );
@@ -195,7 +197,7 @@ const Square = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect x="2.5" y="2.5" width="45" height="45" rx="2.5" stroke-width="5" />
+    <rect x="2.5" y="2.5" width="45" height="45" rx="2.5" strokeWidth="5" />
   </svg>
 );
 
@@ -208,7 +210,7 @@ const Circle = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="26" cy="26" r="23.5" stroke="black" stroke-width="5" />
+    <circle cx="26" cy="26" r="23.5" stroke="black" strokeWidth="5" />
   </svg>
 );
 
@@ -284,67 +286,79 @@ const completed: CompletedGame[] = [
   },
 ];
 
-const Games = () => (
-  <div>
-    <div className="px-2">
-      <Header3 title="Upcoming" />
-    </div>
+const Games = () => {
+  const { data, isLoading, error } = useSWR("v1/squid-games/games", fetcher);
 
-    <div className="flex flex-col gap-2 mb-6">
-      {upcoming.map((u) => (
-        <Card>
-          <div className="grid grid-cols-12 px-4">
-            <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
-              <div>{u.order}</div>
-            </div>
-            <div className="col-span-7 flex items-center text-md font-bold">
-              {u.title}
-            </div>
-            <div className="col-span-3 flex justify-end">
-              {u.token === "circle" && <Circle />}
-              {u.token === "square" && <Square />}
-              {u.token === "triangle" && <Triangle />}
-            </div>
-          </div>
-        </Card>
-      ))}
-    </div>
+  if (isLoading) {
+    return <>Loaring</>;
+  }
 
-    <div className="px-2">
-      <Header3 title="Completed" />
-    </div>
+  if (error) {
+    return <>Someting went wrong</>;
+  }
 
-    <div className="flex flex-col gap-2 mb-4">
-      {completed.map((g) => (
-        <Card>
-          <div className="grid grid-cols-12 px-4">
-            <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
-              <div>{g.order}</div>
-            </div>
-            <div className="col-span-7 flex flex-col">
-              <div className="mb-1 text-md font-bold">{g.title}</div>
-              <div className="text-sm flex flex-col justify-center gap-.5 text-zinc-400">
-                {g.tokenUsed && (
-                  <Token textColor="text-zinc-100" color="border-zinc-800" />
-                )}
-                {!g.tokenUsed && (
-                  <>
-                    <div>1. {g.winner}</div>
-                    <div>2. {g.second}</div>
-                    <div>3. {g.third}</div>
-                  </>
-                )}
+  return (
+    <div>
+      <div className="px-2">
+        <Header3 title="Upcoming" />
+      </div>
+
+      <div className="flex flex-col gap-2 mb-6">
+        {upcoming.map((u) => (
+          <Card>
+            <div className="grid grid-cols-12 px-4">
+              <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
+                <div>{u.order}</div>
+              </div>
+              <div className="col-span-7 flex items-center text-md font-bold">
+                {u.title}
+              </div>
+              <div className="col-span-3 flex justify-end">
+                {u.token === "circle" && <Circle />}
+                {u.token === "square" && <Square />}
+                {u.token === "triangle" && <Triangle />}
               </div>
             </div>
-            <div className="col-span-3 flex items-center justify-end">
-              <Check />
+          </Card>
+        ))}
+      </div>
+
+      <div className="px-2">
+        <Header3 title="Completed" />
+      </div>
+
+      <div className="flex flex-col gap-2 mb-4">
+        {completed.map((g) => (
+          <Card>
+            <div className="grid grid-cols-12 px-4">
+              <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
+                <div>{g.order}</div>
+              </div>
+              <div className="col-span-7 flex flex-col">
+                <div className="mb-1 text-md font-bold">{g.title}</div>
+                <div className="text-sm flex flex-col justify-center gap-.5 text-zinc-400">
+                  {g.tokenUsed && (
+                    <Token textColor="text-zinc-100" color="border-zinc-800" />
+                  )}
+                  {!g.tokenUsed && (
+                    <>
+                      <div>1. {g.winner}</div>
+                      <div>2. {g.second}</div>
+                      <div>3. {g.third}</div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="col-span-3 flex items-center justify-end">
+                <Check />
+              </div>
             </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Index = () => {
   const [currentTab, setCurrentTab] = useState<"games" | "leaderboard">(
