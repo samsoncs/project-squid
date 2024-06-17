@@ -1,4 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -10,7 +12,7 @@ export default async function AuthButton() {
   } = await supabase.auth.getUser();
 
   const signOut = async () => {
-    "use server";
+    "use client";
 
     const supabase = createClient();
     await supabase.auth.signOut();
