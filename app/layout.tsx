@@ -5,7 +5,8 @@ import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Session } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/client";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Login from "@/components/Login";
 
 type AuthContextType = {
   session: Session | null;
@@ -25,7 +26,6 @@ export default function RootLayout({
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
 
-  console.log(pathname);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -43,7 +43,13 @@ export default function RootLayout({
 
   if (!isLoading && !session) {
     if (!pathname.endsWith("login") && pathname !== "/") {
-      redirect("/login"); // TODO: Should display login component directly here, and not redirect (causes flash)
+      return (
+        <html lang="en" className={GeistSans.className}>
+          <body className="bg-zinc-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
+            <Login />
+          </body>
+        </html>
+      );
     }
   }
 

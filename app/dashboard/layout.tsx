@@ -2,29 +2,17 @@
 
 import { createClient } from "@/utils/supabase/client";
 import { Session, UserResponse } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../layout";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
+const supabase = createClient();
+
 export default function Layout({ children }: LayoutProps) {
-  const supabase = createClient();
-  const [user, setUser] = useState<UserResponse | undefined>(undefined);
-  const [session, setSession] = useState<Session | undefined>(undefined);
-
-  useEffect(() => {
-    async function auth() {
-      // const session = (await supabase.auth.getSession())?.data?.session;
-      // if (session) {
-      //   setSession(session);
-      // }
-
-      setUser(await supabase.auth.getUser());
-    }
-
-    auth();
-  }, []);
+  const { session } = useContext(AuthContext);
 
   return (
     <>
@@ -48,8 +36,15 @@ export default function Layout({ children }: LayoutProps) {
               </svg>
             </div>
             <div>
-              {session && <>Log out</>}
-              {!session && <>Log in</>}
+              {session && (
+                <button
+                  onClick={() => {
+                    supabase.auth.signOut();
+                  }}
+                >
+                  Log out
+                </button>
+              )}
             </div>
           </div>
         </div>
