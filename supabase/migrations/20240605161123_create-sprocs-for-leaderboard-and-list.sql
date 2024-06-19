@@ -19,7 +19,7 @@ $$
         te."name" as team_name,
         gr.place
     from game ga
-    left join gameround gr on gr.game_id = ga.game_id
+    left join game_round gr on gr.game_id = ga.game_id
     left join team te on te.team_id = gr.team_id
     order by ga.game_id
 $$

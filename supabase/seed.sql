@@ -14,7 +14,7 @@ values
 (5, 'Skipping rope', false, false, null),
 (6, 'Dancing', true, false, null);
 
-insert into gameround(team_id, game_id, place)
+insert into game_round(team_id, game_id, place)
 values
 (1,1,4),
 (2,1,2),

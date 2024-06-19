@@ -38,36 +38,6 @@ type TeamScore = {
   usedTokens: number;
 };
 
-const leaderBoard: TeamScore[] = [
-  {
-    teamName: "Team Gangbu",
-    score: 16,
-    rank: 1,
-    firstPlaces: 5,
-    secondPlaces: 2,
-    thirdPlaces: 3,
-    usedTokens: 2,
-  },
-  {
-    teamName: "Team Chang",
-    score: 12,
-    rank: 2,
-    firstPlaces: 2,
-    secondPlaces: 3,
-    thirdPlaces: 2,
-    usedTokens: 0,
-  },
-  {
-    teamName: "Team Badass",
-    score: 11,
-    rank: 3,
-    firstPlaces: 0,
-    secondPlaces: 3,
-    thirdPlaces: 5,
-    usedTokens: 1,
-  },
-];
-
 const Medal: React.FC<{ color: string; textColor: string; pos: number }> = ({
   color,
   pos,

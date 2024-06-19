@@ -23,22 +23,31 @@ const Login = () => {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col w-96">
-      <label htmlFor="email">Email</label>
+      <label className="text-zinc-400" htmlFor="email">
+        Email
+      </label>
       <input
-        className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
         name="email"
         placeholder="you@example.com"
         required
       />
-      <label htmlFor="password">Password</label>
+      <label className="text-zinc-400" htmlFor="password">
+        Password
+      </label>
       <input
-        className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
         type="password"
         name="password"
         placeholder="••••••••"
         required
       />
-      <button type="submit">Log in</button>
+      <button
+        className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
+        type="submit"
+      >
+        Log in
+      </button>
     </form>
   );
 };
