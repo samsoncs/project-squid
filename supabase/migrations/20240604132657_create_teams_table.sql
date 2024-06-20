@@ -7,5 +7,5 @@ alter table team enable row level security;
 
 create policy "Anyone can read from teams"
 on team for select
-to anon
+to anon, authenticated
 using ( true );

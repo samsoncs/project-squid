@@ -1,4 +1,5 @@
 "use client";
+import { createClient } from "@/utils/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
@@ -31,7 +32,7 @@ const Header3: React.FC<{ title: string }> = ({ title }) => (
 type TeamScore = {
   teamName: string;
   score: number;
-  rank: number;
+  // rank: number;
   firstPlaces: number;
   secondPlaces: number;
   thirdPlaces: number;
@@ -70,14 +71,56 @@ const LoadingCard = () => (
   </Card>
 );
 
-const leaderboardFetcher: Fetcher<TeamScore[], string> = (url: string) =>
-  fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
-    res.json()
+const supabase = createClient();
+
+type LeaderBoardFromDatabase = {
+  game_id: number;
+  game_name: string;
+  is_squid_game: boolean;
+  completed: boolean;
+  squid_token_used?: string;
+  team_name: string;
+  place: number;
+};
+
+const leaderboardFetcher: Fetcher<TeamScore[], string> = async (_: string) => {
+  const { data, error } = await supabase.rpc("get_leaderboard");
+
+  if (error) {
+    const err = new Error(error.message);
+    err.name = error.hint;
+    throw error;
+  }
+
+  const resultsByTeamName = Object.groupBy(
+    data as LeaderBoardFromDatabase[],
+    (f) => f.team_name
   );
+  const keys = Object.keys(resultsByTeamName).filter((k) => k !== "null");
+  const result: TeamScore[] = keys.map((k_1) => ({
+    teamName: k_1,
+    score: resultsByTeamName[k_1]!.reduce(
+      (a, b) => a + (!b.squid_token_used ? keys.length - b.place : 0),
+      0
+    ),
+    firstPlaces: resultsByTeamName[k_1]!.filter(
+      (r) => r.place === 1 && !r.squid_token_used
+    ).length,
+    secondPlaces: resultsByTeamName[k_1]!.filter(
+      (r_1) => r_1.place === 2 && !r_1.squid_token_used
+    ).length,
+    thirdPlaces: resultsByTeamName[k_1]!.filter(
+      (r_2) => r_2.place === 3 && !r_2.squid_token_used
+    ).length,
+    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => r_3.squid_token_used)
+      .length,
+  }));
+  return result;
+};
 
 const Leaderboard = () => {
   const { data, isLoading, error } = useSWR(
-    "v1/squid-games/leaderboard",
+    "fetchLeaderboard",
     leaderboardFetcher
   );
 
@@ -202,7 +245,7 @@ type Game = {
   firstPlace?: string;
   secondPlace?: string;
   thirdPlace?: string;
-  squidTokenUsed: string;
+  squidTokenUsed?: string;
 };
 
 type Games = {
@@ -210,16 +253,52 @@ type Games = {
   completed: Game[];
 };
 
-const gamesFetcher: Fetcher<Games, string> = (url: string) =>
-  fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/${url}`).then((res) =>
-    res.json()
+const gamesFetcher: Fetcher<Games, string> = async (_: string) => {
+  const { data, error } = await supabase.rpc("get_leaderboard");
+
+  if (error) {
+    const err = new Error(error.message);
+    err.name = error.hint;
+    throw error;
+  }
+
+  const resultsByGame = Object.groupBy(
+    data as LeaderBoardFromDatabase[],
+    (f) => f.game_name
   );
+  const keys = Object.keys(resultsByGame).filter((k) => k !== "null");
+  const result: Games = {
+    completed: keys
+      .filter((k) => resultsByGame[k]![0].completed)
+      .map((k) => ({
+        gameName: k,
+        order: resultsByGame[k]![0].game_id,
+        isSquidGame: resultsByGame[k]![0].is_squid_game,
+        firstPlace: !resultsByGame[k]![0].squid_token_used
+          ? resultsByGame[k]!.find((g) => g.place === 1)?.team_name
+          : undefined,
+        secondPlace: !resultsByGame[k]![0].squid_token_used
+          ? resultsByGame[k]!.find((g) => g.place === 2)?.team_name
+          : undefined,
+        thirdPlace: !resultsByGame[k]![0].squid_token_used
+          ? resultsByGame[k]!.find((g) => g.place === 3)?.team_name
+          : undefined,
+        squidTokenUsed: resultsByGame[k]![0].squid_token_used,
+      })),
+    upcoming: keys
+      .filter((k) => !resultsByGame[k]![0].completed)
+      .map((k) => ({
+        gameName: k,
+        order: resultsByGame[k]![0].game_id,
+        isSquidGame: resultsByGame[k]![0].is_squid_game,
+      })),
+  };
+
+  return result;
+};
 
 const Games = () => {
-  const { data, isLoading, error } = useSWR(
-    "v1/squid-games/games",
-    gamesFetcher
-  );
+  const { data, isLoading, error } = useSWR("fetchGames", gamesFetcher);
 
   return (
     <div>
@@ -246,7 +325,7 @@ const Games = () => {
 
         {!isLoading &&
           !error &&
-          data!.upcoming.map((u) => (
+          data!.upcoming?.map((u) => (
             <Card key={u.gameName}>
               <div className="grid grid-cols-12 px-4">
                 <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
@@ -290,7 +369,7 @@ const Games = () => {
         {error && <>Something went wrong</>}
         {!isLoading &&
           !error &&
-          data!.completed.map((g) => (
+          data!.completed?.map((g) => (
             <Card key={g.gameName}>
               <div className="grid grid-cols-12 px-4">
                 <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
