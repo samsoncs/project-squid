@@ -1,6 +1,7 @@
 "use client";
+import Card from "@/components/Card";
+import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
@@ -19,10 +20,6 @@ const Check = () => (
       d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
     />
   </svg>
-);
-
-const Card: React.FC<{ children: React.ReactElement }> = ({ children }) => (
-  <div className="bg-zinc-800 rounded-md p-2">{children}</div>
 );
 
 const Header3: React.FC<{ title: string }> = ({ title }) => (
@@ -60,15 +57,6 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   >
     ?
   </div>
-);
-
-const LoadingCard = () => (
-  <Card>
-    <div className="p-4 px-2 flex flex-col gap-4">
-      <div className="bg-zinc-600 w-full h-2 rounded-md" />
-      <div className="bg-zinc-600 w-1/2 h-2 rounded-md" />
-    </div>
-  </Card>
 );
 
 const supabase = createClient();

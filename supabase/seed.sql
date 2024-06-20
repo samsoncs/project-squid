@@ -60,7 +60,7 @@ INSERT INTO auth.users (
   reauthentication_sent_at
 )
 values(
-     uuid_generate_v4(),
+    '66efe21d-7bf8-4425-915b-8000a7b10840',
     '00000000-0000-0000-0000-000000000000'::uuid,
     'authenticated',
     'authenticated',

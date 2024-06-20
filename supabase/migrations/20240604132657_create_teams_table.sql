@@ -5,7 +5,7 @@ CREATE TABLE team(
 
 alter table team enable row level security;
 
-create policy "Anyone can read from teams"
+create policy "Authenticated can read from teams"
 on team for select
-to anon, authenticated
+to authenticated
 using ( true );

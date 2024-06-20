@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/client";
 import { FormEvent } from "react";
 
+const supabase = createClient();
+
 const Login = () => {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -9,7 +11,6 @@ const Login = () => {
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const supabase = createClient();
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
