@@ -81,13 +81,21 @@ export default function RootLayout({
                   {session &&
                     session.user.id ===
                       "66efe21d-7bf8-4425-915b-8000a7b10840" && (
-                      <Link href="/admin/start-game">Admin</Link>
+                      <Link
+                        className="text-sm font-bold"
+                        href="/admin/start-game"
+                      >
+                        Admin
+                      </Link>
                     )}
                   {session && (
                     <>
-                      <Link href="/my-team">My team</Link>
+                      <Link className="text-sm font-bold" href="/my-team">
+                        My team
+                      </Link>
 
                       <button
+                        className="text-sm font-bold"
                         onClick={() => {
                           supabase.auth.signOut();
                         }}
