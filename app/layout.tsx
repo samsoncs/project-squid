@@ -7,6 +7,7 @@ import { Session } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/client";
 import { usePathname } from "next/navigation";
 import Login from "@/components/Login";
+import Link from "next/link";
 
 type AuthContextType = {
   session: Session | null;
@@ -76,17 +77,24 @@ export default function RootLayout({
                     />
                   </svg>
                 </div>
-                <div>
+                <div className="flex gap-4">
                   {session &&
-                    session.user.id === "2b70bafd-9aa3-47d4-854e-da678d181635"}
+                    session.user.id ===
+                      "66efe21d-7bf8-4425-915b-8000a7b10840" && (
+                      <Link href="/admin/start-game">Admin</Link>
+                    )}
                   {session && (
-                    <button
-                      onClick={() => {
-                        supabase.auth.signOut();
-                      }}
-                    >
-                      Log out
-                    </button>
+                    <>
+                      <Link href="/my-team">My team</Link>
+
+                      <button
+                        onClick={() => {
+                          supabase.auth.signOut();
+                        }}
+                      >
+                        Log out
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

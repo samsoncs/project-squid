@@ -5,14 +5,14 @@ values
 (3, 'Test'),
 (4, 'Cool team');
 
-insert into game(game_id, "name", is_squid_game, completed, squid_token_used)
+insert into game(game_id, "name", is_squid_game)
 values
-(1, 'The cookie cutter', true, true, null),
-(2, 'Running', false, true, 1),
-(3, 'Skiing', true, false, null),
-(4, 'Go Kart', false, false, 2),
-(5, 'Skipping rope', false, false, null),
-(6, 'Dancing', true, false, null);
+(1, 'The cookie cutter', true),
+(2, 'Running', false),
+(3, 'Skiing', true),
+(4, 'Go Kart', false),
+(5, 'Skipping rope', false),
+(6, 'Dancing', true);
 
 insert into game_round(team_id, game_id, place)
 values
@@ -76,7 +76,7 @@ values(
     '',
     NULL::timestamp,
     now()::timestamp,
-    '{"provider":"email","providers":["email"]}'::jsonb,
+    '{"provider":"email","providers":["email"], "team": 1}'::jsonb,
     '{}'::jsonb,
     0::boolean,
     '2022-10-04 03:41:27.391146+00'::timestamp,
