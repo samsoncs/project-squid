@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./globals.css";
 
 import { GeistSans } from "geist/font/sans";
@@ -8,14 +8,8 @@ import { createClient } from "@/utils/supabase/client";
 import { usePathname } from "next/navigation";
 import Login from "@/components/Login";
 import Link from "next/link";
+import { AuthContext } from "@/components/utils/AuthContext";
 
-type AuthContextType = {
-  session: Session | null;
-};
-
-export const AuthContext = createContext<AuthContextType>({
-  session: null,
-});
 const supabase = createClient();
 
 export default function RootLayout({
