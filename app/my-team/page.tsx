@@ -4,9 +4,8 @@ import Card from "@/components/Card";
 import Header3 from "@/components/Header3";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
-import { AuthContext } from "../layout";
 
 type Token = { token_type: string; tokens_available_id: number };
 
