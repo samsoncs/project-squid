@@ -48,6 +48,10 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
+
+
+
 CREATE OR REPLACE FUNCTION complete_game(game_id integer, result_list integer[])
 RETURNS void
 AS
@@ -55,7 +59,10 @@ $$
 DECLARE 
 	i int = 1;
 	curr_team int;
-
+    curr_token varchar(50);
+    curr_token_team_id int;
+    number_of_teams int;
+	points int;
 BEGIN
     IF auth.uid() != '66efe21d-7bf8-4425-915b-8000a7b10840' THEN
         RAISE EXCEPTION 'Unauthorized';
@@ -65,7 +72,8 @@ BEGIN
         RAISE EXCEPTION 'Cant complete game that is not started';
     END IF;
 
-	IF (select count(1) from Team) != cardinality(result_list) THEN
+    number_of_teams = cardinality(result_list);
+	IF (select count(1) from Team) != number_of_teams THEN
 		RAISE EXCEPTION 'All teams needs to have result to complete game';
 	END IF;
 
@@ -74,7 +82,7 @@ BEGIN
 		AND (SELECT completed FROM game WHERE game.game_id = complete_game.game_id) = false
 	THEN 
 		INSERT INTO tokens_available(team_id, token_type)
-		VALUES(complete_game.result_list[1], 'One');
+		VALUES(complete_game.result_list[1], 'REVERSE');
 	END IF;
 
     UPDATE game SET completed = true
@@ -83,9 +91,26 @@ BEGIN
     -- Reset state if re-completing a round
     DELETE FROM game_round WHERE game_round.game_id = complete_game.game_id;
 
+    SELECT t.token_type, t.team_id INTO curr_token, curr_token_team_id 
+	FROM tokens_used t 
+	WHERE t.game_id = complete_game.game_id;
+		
 	FOREACH curr_team IN ARRAY result_list LOOP
-		INSERT INTO game_round(game_id, team_id, place)
-	    VALUES (game_id, curr_team, i);
+		-- Hide points if token was used, and its not the last game
+        IF curr_token IS NOT NULL AND complete_game.game_id != (SELECT MAX(game.game_id) FROM game) THEN
+            points = null;
+		ELSEIF curr_token = 'REVERSE' THEN
+            points = i - 1;
+        ELSEIF (curr_token = 'DOUBLE_TROUBLE' AND curr_token_team_id = curr_team AND i < number_of_teams) THEN
+            points = (number_of_teams - i) * 2;
+        ELSEIF (curr_token = 'DOUBLE_TROUBLE' AND curr_token_team_id = curr_team AND i = number_of_teams) THEN
+            points = (number_of_teams - i) - 1;
+        ELSE
+            points = (number_of_teams - i);
+        END IF;
+
+		INSERT INTO game_round(game_id, team_id, place, points) 
+	    VALUES (game_id, curr_team, i, points);
         i:= i+ 1;	
 	END LOOP;
 
