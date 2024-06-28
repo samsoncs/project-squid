@@ -79,7 +79,6 @@ on tokens_available for select
 to authenticated
 using (team_id = (select cast((auth.jwt() -> 'app_metadata' ->> 'team') as integer)));
 
-
 create policy "Authenticated can delete tokens from tokens_available assigned to their own team"
 on tokens_available for delete
 to authenticated
@@ -89,3 +88,22 @@ create policy "Hardcoded authenticated user can insert tokens_available"
 on tokens_available for insert
 to authenticated
 with check( (select auth.uid()) = '66efe21d-7bf8-4425-915b-8000a7b10840' );
+
+create table starting_tokens(
+	token_id bigint primary key generated always as identity,
+	token_type varchar(50),
+	constraint check_token_type check (token_type in ('REVERSE', 'DOUBLE_TROUBLE'))
+);
+
+alter table starting_tokens enable row level security;
+
+create policy "Authenticated can read all tokens from starting_tokens"
+on starting_tokens for select
+to authenticated
+using ( true );
+
+create policy "Authenticated adming can delete tokens from starting_tokens"
+on starting_tokens for delete
+to authenticated
+using( (select auth.uid()) = '66efe21d-7bf8-4425-915b-8000a7b10840' );
+

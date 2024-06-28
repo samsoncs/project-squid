@@ -56,6 +56,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION complete_game(game_id integer, result_list integer[])
 RETURNS void
 AS
@@ -85,8 +86,23 @@ BEGIN
 	IF (SELECT is_squid_game FROM game WHERE game.game_id = complete_game.game_id) = true
 		AND (SELECT completed FROM game WHERE game.game_id = complete_game.game_id) = false
 	THEN 
-		INSERT INTO tokens_available(team_id, token_type)
-		VALUES(complete_game.result_list[1], 'REVERSE');
+        CREATE TEMP TABLE randomized_tokens AS
+		SELECT 
+			st.token_id, 
+			st.token_type
+		FROM starting_tokens st
+		ORDER BY random()
+		LIMIT 1;
+			
+		INSERT INTO tokens_available(token_type,team_id)
+		SELECT 
+			rt.token_type,
+			complete_game.result_list[1]
+		FROM randomized_tokens rt
+		LIMIT 1;
+			
+		DELETE FROM starting_tokens st
+		WHERE st.token_id = (SELECT rt.token_id from randomized_tokens rt LIMIT 1);
 	END IF;
 
     UPDATE game SET completed = true
@@ -118,6 +134,13 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+
+
+
+
+
+
 
 CREATE OR REPLACE FUNCTION use_token(token_id integer, game_id integer)
 RETURNS void
