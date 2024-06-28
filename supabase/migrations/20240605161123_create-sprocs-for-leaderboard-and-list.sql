@@ -56,7 +56,6 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION complete_game(game_id integer, result_list integer[])
 RETURNS void
 AS
@@ -86,7 +85,7 @@ BEGIN
 	IF (SELECT is_squid_game FROM game WHERE game.game_id = complete_game.game_id) = true
 		AND (SELECT completed FROM game WHERE game.game_id = complete_game.game_id) = false
 	THEN 
-        CREATE TEMP TABLE randomized_tokens AS
+        CREATE TEMP TABLE IF NOT EXISTS randomized_tokens AS
 		SELECT 
 			st.token_id, 
 			st.token_type

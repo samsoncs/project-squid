@@ -22,7 +22,6 @@ values
 ('DOUBLE_TROUBLE'),
 ('DOUBLE_TROUBLE');
 
-
 INSERT INTO auth.users (
   id,
   instance_id,

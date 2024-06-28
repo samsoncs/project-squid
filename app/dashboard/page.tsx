@@ -26,7 +26,6 @@ const Check = () => (
 type TeamScore = {
   teamName: string;
   score: number;
-  // rank: number;
   firstPlaces: number;
   secondPlaces: number;
   thirdPlaces: number;
