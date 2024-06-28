@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION get_leaderboard()
     squid_token_used varchar(50),
     squid_token_used_by varchar(100),
     team_name varchar(100), 
-    place integer
+    place integer,
+    points integer
     )
 AS 
 $$
@@ -19,7 +20,14 @@ $$
         tu.token_type as squid_token_used,
         (select "name" from team where team_id = tu.team_id) as squid_token_used_by,
         te."name" as team_name,
-        gr.place
+        gr.place,
+        CASE WHEN 
+            (SELECT count(1) FROM game WHERE completed = true) = (SELECT count(1) FROM game) 
+        THEN
+            gr.points
+        ELSE
+            gr.masked_points
+        END AS points
     from game ga
     left join game_round gr on gr.game_id = ga.game_id
     left join team te on te.team_id = gr.team_id
@@ -47,10 +55,6 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
-
-
-
-
 
 CREATE OR REPLACE FUNCTION complete_game(game_id integer, result_list integer[])
 RETURNS void
@@ -96,10 +100,7 @@ BEGIN
 	WHERE t.game_id = complete_game.game_id;
 		
 	FOREACH curr_team IN ARRAY result_list LOOP
-		-- Hide points if token was used, and its not the last game
-        IF curr_token IS NOT NULL AND complete_game.game_id != (SELECT MAX(game.game_id) FROM game) THEN
-            points = null;
-		ELSEIF curr_token = 'REVERSE' THEN
+		IF curr_token = 'REVERSE' THEN
             points = i - 1;
         ELSEIF (curr_token = 'DOUBLE_TROUBLE' AND curr_token_team_id = curr_team AND i < number_of_teams) THEN
             points = (number_of_teams - i) * 2;
@@ -109,8 +110,8 @@ BEGIN
             points = (number_of_teams - i);
         END IF;
 
-		INSERT INTO game_round(game_id, team_id, place, points) 
-	    VALUES (game_id, curr_team, i, points);
+		INSERT INTO game_round(game_id, team_id, place, points, masked_points) 
+	    VALUES (game_id, curr_team, i, points, CASE WHEN (curr_token IS NOT NULL AND complete_game.game_id != (SELECT MAX(game.game_id) FROM game)) THEN null ELSE points END);
         i:= i+ 1;	
 	END LOOP;
 

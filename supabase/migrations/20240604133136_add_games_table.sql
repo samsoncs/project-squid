@@ -23,7 +23,8 @@ CREATE TABLE game_round(
     team_id bigint not null REFERENCES team(team_id),
     game_id bigint not null REFERENCES game(game_id),
     place int not null,
-    points int,
+    points int not null,
+    masked_points int,
     UNIQUE (team_id, game_id)
 );
 
