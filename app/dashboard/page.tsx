@@ -87,15 +87,16 @@ const leaderboardFetcher: Fetcher<TeamScore[], string> = async (_: string) => {
     teamName: k_1,
     score: resultsByTeamName[k_1]!.reduce((a, b) => a + (b.points ?? 0), 0),
     firstPlaces: resultsByTeamName[k_1]!.filter(
-      (r) => r.place === 1 && r.points
+      (r) => r.place === 1 && r.points !== null
     ).length,
     secondPlaces: resultsByTeamName[k_1]!.filter(
-      (r_1) => r_1.place === 2 && r_1.points
+      (r_1) => r_1.place === 2 && r_1.points !== null
     ).length,
     thirdPlaces: resultsByTeamName[k_1]!.filter(
-      (r_2) => r_2.place === 3 && r_2.points
+      (r_2) => r_2.place === 3 && r_2.points !== null
     ).length,
-    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => !r_3.points).length,
+    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => r_3.points === null)
+      .length,
   }));
   return result;
 };
