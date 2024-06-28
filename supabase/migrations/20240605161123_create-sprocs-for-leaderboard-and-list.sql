@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION get_leaderboard()
     squid_token_used varchar(50),
     squid_token_used_by varchar(100),
     team_name varchar(100), 
-    place integer
+    place integer,
+    points integer
     )
 AS 
 $$
@@ -19,7 +20,14 @@ $$
         tu.token_type as squid_token_used,
         (select "name" from team where team_id = tu.team_id) as squid_token_used_by,
         te."name" as team_name,
-        gr.place
+        gr.place,
+        CASE WHEN 
+            (SELECT count(1) FROM game WHERE completed = true) = (SELECT count(1) FROM game) 
+        THEN
+            gr.points
+        ELSE
+            gr.masked_points
+        END AS points
     from game ga
     left join game_round gr on gr.game_id = ga.game_id
     left join team te on te.team_id = gr.team_id
@@ -55,7 +63,10 @@ $$
 DECLARE 
 	i int = 1;
 	curr_team int;
-
+    curr_token varchar(50);
+    curr_token_team_id int;
+    number_of_teams int;
+	points int;
 BEGIN
     IF auth.uid() != '66efe21d-7bf8-4425-915b-8000a7b10840' THEN
         RAISE EXCEPTION 'Unauthorized';
@@ -65,7 +76,8 @@ BEGIN
         RAISE EXCEPTION 'Cant complete game that is not started';
     END IF;
 
-	IF (select count(1) from Team) != cardinality(result_list) THEN
+    number_of_teams = cardinality(result_list);
+	IF (select count(1) from Team) != number_of_teams THEN
 		RAISE EXCEPTION 'All teams needs to have result to complete game';
 	END IF;
 
@@ -73,8 +85,23 @@ BEGIN
 	IF (SELECT is_squid_game FROM game WHERE game.game_id = complete_game.game_id) = true
 		AND (SELECT completed FROM game WHERE game.game_id = complete_game.game_id) = false
 	THEN 
-		INSERT INTO tokens_available(team_id, token_type)
-		VALUES(complete_game.result_list[1], 'One');
+        CREATE TEMP TABLE IF NOT EXISTS randomized_tokens AS
+		SELECT 
+			st.token_id, 
+			st.token_type
+		FROM starting_tokens st
+		ORDER BY random()
+		LIMIT 1;
+			
+		INSERT INTO tokens_available(token_type,team_id)
+		SELECT 
+			rt.token_type,
+			complete_game.result_list[1]
+		FROM randomized_tokens rt
+		LIMIT 1;
+			
+		DELETE FROM starting_tokens st
+		WHERE st.token_id = (SELECT rt.token_id from randomized_tokens rt LIMIT 1);
 	END IF;
 
     UPDATE game SET completed = true
@@ -83,15 +110,36 @@ BEGIN
     -- Reset state if re-completing a round
     DELETE FROM game_round WHERE game_round.game_id = complete_game.game_id;
 
+    SELECT t.token_type, t.team_id INTO curr_token, curr_token_team_id 
+	FROM tokens_used t 
+	WHERE t.game_id = complete_game.game_id;
+		
 	FOREACH curr_team IN ARRAY result_list LOOP
-		INSERT INTO game_round(game_id, team_id, place)
-	    VALUES (game_id, curr_team, i);
+		IF curr_token = 'REVERSE' THEN
+            points = i - 1;
+        ELSEIF (curr_token = 'DOUBLE_TROUBLE' AND curr_token_team_id = curr_team AND i < number_of_teams) THEN
+            points = (number_of_teams - i) * 2;
+        ELSEIF (curr_token = 'DOUBLE_TROUBLE' AND curr_token_team_id = curr_team AND i = number_of_teams) THEN
+            points = (number_of_teams - i) - 1;
+        ELSE
+            points = (number_of_teams - i);
+        END IF;
+
+		INSERT INTO game_round(game_id, team_id, place, points, masked_points) 
+	    VALUES (game_id, curr_team, i, points, CASE WHEN (curr_token IS NOT NULL AND complete_game.game_id != (SELECT MAX(game.game_id) FROM game)) THEN null ELSE points END);
         i:= i+ 1;	
 	END LOOP;
 
 END;
 $$
 LANGUAGE plpgsql;
+
+
+
+
+
+
+
 
 CREATE OR REPLACE FUNCTION use_token(token_id integer, game_id integer)
 RETURNS void

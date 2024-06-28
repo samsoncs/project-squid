@@ -1,6 +1,7 @@
 "use client";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 
@@ -13,6 +14,7 @@ type Team = {
 
 type Game = {
   game_id: number;
+  name: string;
   completed: boolean;
   is_started: boolean;
 };
@@ -26,7 +28,7 @@ const teamsFetcher: Fetcher<TeamsAndGames, string> = async (_: string) => {
   const teams = await supabase.from("team").select("team_id, name");
   const games = await supabase
     .from("game")
-    .select("game_id, completed, is_started");
+    .select("game_id, name, completed, is_started");
 
   if (teams.error) {
     const err = new Error(teams.error.message);
@@ -49,6 +51,7 @@ const teamsFetcher: Fetcher<TeamsAndGames, string> = async (_: string) => {
 const Admin = () => {
   const [completeError, setCompleteError] = useState<string | undefined>();
   const [haveClickedSubmit, setHaveClickedSubmit] = useState<boolean>(false);
+  const router = useRouter();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -76,9 +79,11 @@ const Admin = () => {
 
     if (error) {
       setCompleteError(error.message);
+    } else {
+      mutate("fetchGamesStartState");
+      mutate("fetchTeam");
+      router.push("/admin/start-game");
     }
-
-    mutate("fetchTeam");
   }
 
   const { data, isLoading, error } = useSWR("fetchTeam", teamsFetcher);
@@ -109,16 +114,11 @@ const Admin = () => {
         name="game"
       >
         {data?.games
-          .filter((g) => !g.completed)
-          .sort((a, b) => a.game_id - b.game_id)
+          .sort((a, b) => b.game_id - a.game_id)
           .map((g) => (
-            <option value={g.game_id}>{g.game_id}</option>
-          ))}
-        {data?.games
-          .filter((g) => g.completed)
-          .sort((a, b) => a.game_id - b.game_id)
-          .map((g) => (
-            <option value={g.game_id}>{g.game_id} - Completed</option>
+            <option value={g.game_id}>
+              {g.game_id} - {g.name} {g.completed && "- Completed"}
+            </option>
           ))}
       </select>
 

@@ -1,6 +1,7 @@
 "use client";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 
@@ -9,12 +10,13 @@ const supabase = createClient();
 type Game = {
   game_id: number;
   is_started: boolean;
+  name: string;
 };
 
 const nextUnstartedGameFetcher: Fetcher<Game | undefined, string> = async (
   _: string
 ) => {
-  const games = await supabase.from("game").select("game_id, is_started");
+  const games = await supabase.from("game").select("game_id, is_started, name");
 
   if (games.error) {
     const err = new Error(games.error.message);
@@ -30,6 +32,7 @@ const nextUnstartedGameFetcher: Fetcher<Game | undefined, string> = async (
 const Admin = () => {
   const [completeError, setCompleteError] = useState<string | undefined>();
   const [haveClickedSubmit, setHaveClickedSubmit] = useState<boolean>(false);
+  const router = useRouter();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,9 +45,11 @@ const Admin = () => {
 
     if (error) {
       setCompleteError(error.message);
+    } else {
+      mutate("fetchTeam");
+      mutate("fetchGamesStartState");
+      router.push("/admin/complete-game");
     }
-
-    mutate("fetchGamesStartState");
   }
 
   const { data, isLoading, error } = useSWR(
@@ -72,7 +77,7 @@ const Admin = () => {
       {data && (
         <form onSubmit={onSubmit} className="flex flex-col gap-1">
           <label className="text-zinc-400 pb-1" htmlFor="game">
-            Game {data.game_id}
+            Game {data.game_id} - {data.name}
           </label>
 
           <button

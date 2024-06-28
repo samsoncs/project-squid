@@ -26,7 +26,6 @@ const Check = () => (
 type TeamScore = {
   teamName: string;
   score: number;
-  // rank: number;
   firstPlaces: number;
   secondPlaces: number;
   thirdPlaces: number;
@@ -66,6 +65,7 @@ type LeaderBoardFromDatabase = {
   squid_token_used?: string;
   team_name: string;
   place: number;
+  points: number | null;
 };
 
 const leaderboardFetcher: Fetcher<TeamScore[], string> = async (_: string) => {
@@ -84,20 +84,17 @@ const leaderboardFetcher: Fetcher<TeamScore[], string> = async (_: string) => {
   const keys = Object.keys(resultsByTeamName).filter((k) => k !== "null");
   const result: TeamScore[] = keys.map((k_1) => ({
     teamName: k_1,
-    score: resultsByTeamName[k_1]!.reduce(
-      (a, b) => a + (!b.squid_token_used ? keys.length - b.place : 0),
-      0
-    ),
+    score: resultsByTeamName[k_1]!.reduce((a, b) => a + (b.points ?? 0), 0),
     firstPlaces: resultsByTeamName[k_1]!.filter(
-      (r) => r.place === 1 && !r.squid_token_used
+      (r) => r.place === 1 && r.points !== null
     ).length,
     secondPlaces: resultsByTeamName[k_1]!.filter(
-      (r_1) => r_1.place === 2 && !r_1.squid_token_used
+      (r_1) => r_1.place === 2 && r_1.points !== null
     ).length,
     thirdPlaces: resultsByTeamName[k_1]!.filter(
-      (r_2) => r_2.place === 3 && !r_2.squid_token_used
+      (r_2) => r_2.place === 3 && r_2.points !== null
     ).length,
-    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => r_3.squid_token_used)
+    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => r_3.points === null)
       .length,
   }));
   return result;
