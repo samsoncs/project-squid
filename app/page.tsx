@@ -92,7 +92,7 @@ const Index = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.8 }}
       >
-        <Link className="p-4 text-lg bg-pink-500 rounded-md" href="/dashboard">
+        <Link className="p-4 text-lg bg-pink-600 rounded-md" href="/dashboard">
           Enter
         </Link>
       </motion.div>
