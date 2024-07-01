@@ -3,6 +3,7 @@ import Card from "@/components/Card";
 import Header3 from "@/components/Header3";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
@@ -29,6 +30,7 @@ type TeamScore = {
   firstPlaces: number;
   secondPlaces: number;
   thirdPlaces: number;
+  totalUsedTokens: number;
   usedTokens: number;
 };
 
@@ -49,7 +51,7 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   textColor,
 }) => (
   <div
-    className={`rounded-full border-2 text-sm ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
+    className={`rounded-full border-2 text-md ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
   >
     ?
   </div>
@@ -63,6 +65,7 @@ type LeaderBoardFromDatabase = {
   is_squid_game: boolean;
   completed: boolean;
   squid_token_used?: string;
+  squid_token_used_by?: string;
   team_name: string;
   place: number;
   points: number | null;
@@ -94,8 +97,12 @@ const leaderboardFetcher: Fetcher<TeamScore[], string> = async (_: string) => {
     thirdPlaces: resultsByTeamName[k_1]!.filter(
       (r_2) => r_2.place === 3 && r_2.points !== null
     ).length,
-    usedTokens: resultsByTeamName[k_1]!.filter((r_3) => r_3.points === null)
-      .length,
+    usedTokens: resultsByTeamName[k_1]!.filter(
+      (r_3) => k_1 === r_3.squid_token_used_by && r_3.points === null
+    ).length,
+    totalUsedTokens: resultsByTeamName[k_1]!.filter(
+      (r_3) => r_3.points === null
+    ).length,
   }));
   return result;
 };
@@ -112,6 +119,14 @@ const Leaderboard = () => {
         <Header3 title="Leaderboard" />
       </div>
       <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-12 px-2 text-sm font-bold">
+          <div className="col-span-2 text-zinc-400">#</div>
+          <div className="col-span-8 text-zinc-400">Team</div>
+          <div className="col-span-2 flex justify-end text-zinc-400">
+            Points
+          </div>
+        </div>
+
         {isLoading && (
           <div className="flex flex-col gap-2">
             <LoadingCard />
@@ -161,10 +176,19 @@ const Leaderboard = () => {
                       {[...Array(r.usedTokens)].map((_, idx) => (
                         <Token
                           key={idx}
-                          textColor="text-zinc-100"
+                          textColor="text-pink-500"
                           color="border-zinc-800"
                         />
                       ))}
+                      {[...Array(r.totalUsedTokens - r.usedTokens)].map(
+                        (_, idx) => (
+                          <Token
+                            key={idx}
+                            textColor="text-zinc-100"
+                            color="border-zinc-800"
+                          />
+                        )
+                      )}
                     </div>
                   </div>
                   <div className="col-span-2 font-bold flex justify-end items-center">
@@ -225,8 +249,11 @@ type Game = {
   order: number;
   isSquidGame: boolean;
   firstPlace?: string;
+  firstPlacePoints?: number | null;
   secondPlace?: string;
+  secondPlacePoints?: number | null;
   thirdPlace?: string;
+  thirdPlacePoints?: number | null;
   squidTokenUsed?: string;
 };
 
@@ -259,12 +286,15 @@ const gamesFetcher: Fetcher<Games, string> = async (_: string) => {
         firstPlace: !resultsByGame[k]![0].squid_token_used
           ? resultsByGame[k]!.find((g) => g.place === 1)?.team_name
           : undefined,
+        firstPlacePoints: resultsByGame[k]!.find((g) => g.place === 1)?.points,
         secondPlace: !resultsByGame[k]![0].squid_token_used
           ? resultsByGame[k]!.find((g) => g.place === 2)?.team_name
           : undefined,
+        secondPlacePoints: resultsByGame[k]!.find((g) => g.place === 2)?.points,
         thirdPlace: !resultsByGame[k]![0].squid_token_used
           ? resultsByGame[k]!.find((g) => g.place === 3)?.team_name
           : undefined,
+        thirdPlacePoints: resultsByGame[k]!.find((g) => g.place === 3)?.points,
         squidTokenUsed: resultsByGame[k]![0].squid_token_used,
       })),
     upcoming: keys
@@ -364,22 +394,27 @@ const Games = () => {
                 <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
                   <div>{g.order}</div>
                 </div>
-                <div className="col-span-7 flex flex-col">
+                <div className="col-span-7 md:col-span-2 flex flex-col">
                   <div className="mb-1 text-md font-bold">{g.gameName}</div>
                   <div className="text-sm flex flex-col justify-center gap-.5 text-zinc-400">
-                    {g.squidTokenUsed && (
-                      <div className="flex">Squid token used</div>
-                    )}
-                    {!g.squidTokenUsed && (
-                      <>
-                        <div>1. {g.firstPlace}</div>
-                        <div>2. {g.secondPlace}</div>
-                        <div>3. {g.thirdPlace}</div>
-                      </>
-                    )}
+                    <div className="flex gap-2">
+                      <div>1.</div>
+                      <div className="grow">{g.firstPlace}</div>
+                      <div>{g.firstPlacePoints ?? "?"} pts</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div>2.</div>
+                      <div className="grow">{g.secondPlace}</div>
+                      <div>{g.secondPlacePoints ?? "?"} pts</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div>3.</div>
+                      <div className="grow">{g.thirdPlace}</div>
+                      <div>{g.thirdPlacePoints ?? "?"} pts</div>
+                    </div>
                   </div>
                 </div>
-                <div className="col-span-3 flex items-center justify-end">
+                <div className="col-span-3 md:col-span-8 flex items-center justify-end">
                   <Check />
                 </div>
               </div>
@@ -390,12 +425,69 @@ const Games = () => {
   );
 };
 
+type TeamTokens = {
+  teamTokens: number;
+};
+
+const hasTeamTokenFetcher: Fetcher<TeamTokens, string> = async (_: string) => {
+  const team_id = (await supabase.auth.getSession()).data.session?.user
+    .app_metadata.team as number;
+
+  const { data, error } = await supabase
+    .from("tokens_available")
+    .select("team_id");
+
+  if (error) {
+    const err = new Error(error.message);
+    err.name = error.hint;
+    throw err;
+  }
+
+  return {
+    teamTokens: data.filter((d) => (d.team_id = team_id)).length,
+  };
+};
+
 const Dashboard = () => {
   const [currentTab, setCurrentTab] = useState<"games" | "leaderboard">(
     "leaderboard"
   );
+
+  const { data, isLoading, error } = useSWR(
+    "tokensAvailable",
+    hasTeamTokenFetcher
+  );
+
   return (
     <div>
+      {!isLoading && !error && data && data.teamTokens > 0 && (
+        <div className="py-4">
+          <Link href="/my-team">
+            <div className="bg-pink-800 rounded-md p-2 px-3">
+              <div className="flex items-center">
+                <div className="grow">{data.teamTokens} token(s) available</div>
+                <button className="flex items-center justify-center w-8 h-8 px-2 py-1 rounded-full bg-pink-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={3}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
+
       <div className="flex justify-center">
         <div className="p-1.5 rounded-lg bg-zinc-800">
           <button

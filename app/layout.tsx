@@ -66,8 +66,8 @@ export default function RootLayout({
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
+                        className="stroke-pink-600"
                         d="M314.5 25.5H176.104C174.093 25.5 172.14 26.1737 170.556 27.4137L64.5504 110.414C59.9483 114.017 59.9483 120.983 64.5504 124.586L170.556 207.586C172.14 208.826 174.093 209.5 176.104 209.5H314.5C319.471 209.5 323.5 205.471 323.5 200.5V34.5C323.5 29.5294 319.471 25.5 314.5 25.5Z"
-                        stroke="#EC4899"
                         strokeWidth="30"
                       />
                     </svg>
@@ -86,10 +86,6 @@ export default function RootLayout({
                     )}
                   {session && (
                     <>
-                      <Link className="text-sm font-bold" href="/my-team">
-                        My team
-                      </Link>
-
                       <button
                         className="text-sm font-bold"
                         onClick={() => {

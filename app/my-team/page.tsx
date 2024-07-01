@@ -7,7 +7,10 @@ import { createClient } from "@/utils/supabase/client";
 import { FormEvent, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 
-type Token = { token_type: string; tokens_available_id: number };
+type Token = {
+  token_type: "DOUBLE_TROUBLE" | "REVERSE";
+  tokens_available_id: number;
+};
 
 type TeamToken = {
   team_id: number;
@@ -15,9 +18,14 @@ type TeamToken = {
   tokens_available: Token[];
 };
 
+type Game = {
+  game_id: number;
+  name: string;
+};
+
 type TeamTokenAndGames = {
   tokens: TeamToken;
-  games: number[];
+  games: Game[];
 };
 
 const supabase = createClient();
@@ -40,7 +48,7 @@ const teamTokenFetcher: Fetcher<TeamTokenAndGames, string> = async (
 
   const games = await supabase
     .from("game")
-    .select("game_id")
+    .select("game_id, name")
     .eq("is_started", false);
 
   if (games.error) {
@@ -51,7 +59,7 @@ const teamTokenFetcher: Fetcher<TeamTokenAndGames, string> = async (
 
   return {
     tokens: data.find((d) => (d.team_id = team_id)) as TeamToken,
-    games: games.data.map((g) => g.game_id),
+    games: games.data as Game[],
   };
 };
 
@@ -93,6 +101,7 @@ const Page = () => {
     }
 
     mutate("teamTokens");
+    mutate("tokensAvailable");
     setSelectedToken(undefined);
   }
 
@@ -104,7 +113,13 @@ const Page = () => {
           <Card>
             <div className="flex flex-col gap-2">
               <form onSubmit={onSubmit} className="flex flex-col">
-                <div>Token selected: {selectedToken.token_type}</div>
+                <div>
+                  Token selected:{" "}
+                  {selectedToken.token_type === "DOUBLE_TROUBLE" && (
+                    <>Double trouble</>
+                  )}
+                  {selectedToken.token_type === "REVERSE" && <>Reverse</>}
+                </div>
                 <label
                   className="text-zinc-400 pb-1"
                   htmlFor="gameWeek"
@@ -115,11 +130,13 @@ const Page = () => {
                     name="game"
                   >
                     {data?.games.map((g) => (
-                      <option value={g}>{g}</option>
+                      <option value={g.game_id}>
+                        {g.game_id} - {g.name}
+                      </option>
                     ))}
                   </select>
                 </div>
-                <button type="submit" className="bg-pink-500 rounded-md p-2">
+                <button type="submit" className="bg-pink-600 rounded-md p-2">
                   Use token
                 </button>
               </form>
@@ -131,18 +148,25 @@ const Page = () => {
         )}
         {!selectedToken &&
           data?.tokens.tokens_available.map((t) => (
-            <Card key={t.tokens_available_id}>
+            <div className="bg-pink-800 rounded-md p-2 px-3">
               <div className="flex items-center">
-                <div className="grow">{t.token_type}</div>
+                <div className="grow">
+                  {t.token_type === "DOUBLE_TROUBLE" && <>Double trouble</>}
+                  {t.token_type === "REVERSE" && <>Reverse</>}
+                </div>
                 <button
                   onClick={() => setSelectedToken(t)}
-                  className="bg-pink-500 rounded-md p-2"
+                  className="flex items-center justify-center px-2 py-1 rounded-md bg-pink-600"
                 >
-                  Use token
+                  Use
                 </button>
               </div>
-            </Card>
+            </div>
           ))}
+
+        {!selectedToken && data?.tokens.tokens_available.length === 0 && (
+          <div className="text-zinc-400">No tokens available</div>
+        )}
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col w-96">
+    <form onSubmit={onSubmit} className="flex flex-col w-96 px-2">
       <label className="text-zinc-400" htmlFor="email">
         Email
       </label>
@@ -43,10 +43,7 @@ const Login = () => {
         placeholder="••••••••"
         required
       />
-      <button
-        className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
-        type="submit"
-      >
+      <button className="p-4 bg-pink-600 rounded-md" type="submit">
         Log in
       </button>
     </form>
