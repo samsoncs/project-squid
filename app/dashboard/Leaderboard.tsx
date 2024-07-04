@@ -52,16 +52,16 @@ const Leaderboard = () => {
                         <Medal
                           key={idx}
                           pos={1}
-                          textColor="text-cyan-500"
-                          color="border-cyan-500"
+                          textColor="text-secondary-500"
+                          color="border-secondary-500"
                         />
                       ))}
                       {[...Array(r.secondPlaces)].map((_, idx) => (
                         <Medal
                           key={idx}
                           pos={2}
-                          textColor="text-pink-500"
-                          color="border-pink-500"
+                          textColor="text-primary-500"
+                          color="border-primary-500"
                         />
                       ))}
                       {[...Array(r.thirdPlaces)].map((_, idx) => (
@@ -75,7 +75,7 @@ const Leaderboard = () => {
                       {[...Array(r.usedTokens)].map((_, idx) => (
                         <Token
                           key={idx}
-                          textColor="text-pink-500"
+                          textColor="text-primary-500"
                           color="border-zinc-800"
                         />
                       ))}
@@ -86,7 +86,7 @@ const Leaderboard = () => {
                             textColor="text-zinc-100"
                             color="border-zinc-800"
                           />
-                        ),
+                        )
                       )}
                     </div>
                   </div>

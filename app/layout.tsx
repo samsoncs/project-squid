@@ -40,7 +40,7 @@ export default function RootLayout({
     if (!pathname.endsWith("login") && pathname !== "/") {
       return (
         <html lang="en" className={GeistSans.className}>
-          <body className="bg-zinc-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
+          <body className="bg-background-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
             <Login />
           </body>
         </html>
@@ -50,7 +50,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="bg-zinc-900 text-foreground text-zinc-100">
+      <body className="bg-background-900 text-foreground text-zinc-100">
         {pathname !== "/" && (
           <nav className="w-full bg-zinc-900 flex mb-2 py-1 px-2">
             <div className="w-full max-w-screen-xl mx-auto">
@@ -66,7 +66,7 @@ export default function RootLayout({
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        className="stroke-pink-600"
+                        className="stroke-primary-600"
                         d="M314.5 25.5H176.104C174.093 25.5 172.14 26.1737 170.556 27.4137L64.5504 110.414C59.9483 114.017 59.9483 120.983 64.5504 124.586L170.556 207.586C172.14 208.826 174.093 209.5 176.104 209.5H314.5C319.471 209.5 323.5 205.471 323.5 200.5V34.5C323.5 29.5294 319.471 25.5 314.5 25.5Z"
                         strokeWidth="30"
                       />

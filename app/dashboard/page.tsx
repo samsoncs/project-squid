@@ -14,12 +14,12 @@ const supabase = createClient();
 
 const Dashboard = () => {
   const [currentTab, setCurrentTab] = useState<"games" | "leaderboard">(
-    "leaderboard",
+    "leaderboard"
   );
 
   const { data, isLoading, error } = useSWR(
     hasTeamTokenFetcherKey,
-    hasTeamTokenFetcher,
+    hasTeamTokenFetcher
   );
 
   return (
@@ -27,10 +27,10 @@ const Dashboard = () => {
       {!isLoading && !error && data && data.teamTokens > 0 && (
         <div className="py-4">
           <Link href="/my-team">
-            <div className="bg-pink-800 rounded-md p-2 px-3">
+            <div className="bg-primary-800 rounded-md p-2 px-3">
               <div className="flex items-center">
                 <div className="grow">{data.teamTokens} token(s) available</div>
-                <button className="flex items-center justify-center w-8 h-8 px-2 py-1 rounded-full bg-pink-600">
+                <button className="flex items-center justify-center w-8 h-8 px-2 py-1 rounded-full bg-primary-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

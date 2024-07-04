@@ -17,7 +17,7 @@ const supabase = createClient();
 const Page = () => {
   const { data, isLoading, error } = useSWR(
     teamTokenFetcherKey,
-    teamTokenFetcher,
+    teamTokenFetcher
   );
   const [selectedToken, setSelectedToken] = useState<Token | undefined>();
   const [completeError, setCompleteError] = useState<string | undefined>();
@@ -90,7 +90,7 @@ const Page = () => {
                     ))}
                   </select>
                 </div>
-                <button type="submit" className="bg-pink-600 rounded-md p-2">
+                <button type="submit" className="bg-primary-600 rounded-md p-2">
                   Use token
                 </button>
               </form>
@@ -102,7 +102,7 @@ const Page = () => {
         )}
         {!selectedToken &&
           data?.tokens.tokens_available.map((t) => (
-            <div className="bg-pink-800 rounded-md p-2 px-3">
+            <div className="bg-primary-800 rounded-md p-2 px-3">
               <div className="flex items-center">
                 <div className="grow">
                   {t.token_type === "DOUBLE_TROUBLE" && <>Double trouble</>}
@@ -110,7 +110,7 @@ const Page = () => {
                 </div>
                 <button
                   onClick={() => setSelectedToken(t)}
-                  className="flex items-center justify-center px-2 py-1 rounded-md bg-pink-600"
+                  className="flex items-center justify-center px-2 py-1 rounded-md bg-primary-600"
                 >
                   Use
                 </button>

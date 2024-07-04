@@ -43,7 +43,7 @@ const Login = () => {
         placeholder="••••••••"
         required
       />
-      <button className="p-4 bg-pink-600 rounded-md" type="submit">
+      <button className="p-4 bg-primary-600 rounded-md" type="submit">
         Log in
       </button>
     </form>

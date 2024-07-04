@@ -1,6 +1,6 @@
 const Triangle = () => (
   <svg
-    className="w-8 h-8 stroke-cyan-500"
+    className="w-8 h-8 stroke-secondary-500"
     width="52"
     height="46"
     viewBox="0 0 52 46"

@@ -48,7 +48,7 @@ const AnimatedTriangle = () => (
 
 const AnimatedSquare = () => (
   <svg
-    className="w-16 h-16 stroke-pink-600"
+    className="w-16 h-16 stroke-primary-600"
     width="50"
     height="50"
     viewBox="0 0 50 50"
@@ -91,7 +91,10 @@ const Index = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.8 }}
       >
-        <Link className="p-4 text-lg bg-pink-600 rounded-md" href="/dashboard">
+        <Link
+          className="p-4 text-lg bg-primary-600 rounded-md"
+          href="/dashboard"
+        >
           Enter
         </Link>
       </motion.div>
