@@ -28,7 +28,7 @@ const AnimatedCircle = () => (
 
 const AnimatedTriangle = () => (
   <svg
-    className="w-16 h-16 stroke-cyan-500"
+    className="w-16 h-16 stroke-secondary-500"
     width="52"
     height="46"
     viewBox="0 0 52 46"
@@ -48,7 +48,7 @@ const AnimatedTriangle = () => (
 
 const AnimatedSquare = () => (
   <svg
-    className="w-16 h-16 stroke-primary-600"
+    className="w-16 h-16 stroke-pink-600"
     width="50"
     height="50"
     viewBox="0 0 50 50"
@@ -81,7 +81,7 @@ const Index = () => {
       >
         Do you dare to play?
       </motion.h1>
-      <div className="mb-6 flex gap-2 justify-between">
+      <div className="mb-6 flex gap-2 justify-between pb-2">
         <AnimatedCircle />
         <AnimatedTriangle />
         <AnimatedSquare />

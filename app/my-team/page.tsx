@@ -11,6 +11,7 @@ import {
   teamTokenFetcherKey,
   Token,
 } from "./teamTokenFetcher";
+import Button from "@/components/Button";
 
 const supabase = createClient();
 
@@ -90,9 +91,7 @@ const Page = () => {
                     ))}
                   </select>
                 </div>
-                <button type="submit" className="bg-primary-600 rounded-md p-2">
-                  Use token
-                </button>
+                <Button type="submit" name="Use Token" size="sm" />
               </form>
               {completeError && (
                 <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
@@ -108,12 +107,12 @@ const Page = () => {
                   {t.token_type === "DOUBLE_TROUBLE" && <>Double trouble</>}
                   {t.token_type === "REVERSE" && <>Reverse</>}
                 </div>
-                <button
+
+                <Button
+                  name="Use"
                   onClick={() => setSelectedToken(t)}
-                  className="flex items-center justify-center px-2 py-1 rounded-md bg-primary-600"
-                >
-                  Use
-                </button>
+                  size="sm"
+                />
               </div>
             </div>
           ))}

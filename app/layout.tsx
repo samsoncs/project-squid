@@ -40,7 +40,7 @@ export default function RootLayout({
     if (!pathname.endsWith("login") && pathname !== "/") {
       return (
         <html lang="en" className={GeistSans.className}>
-          <body className="bg-background-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
+          <body className="bg-zinc-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
             <Login />
           </body>
         </html>
@@ -50,7 +50,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="bg-background-900 text-foreground text-zinc-100">
+      <body className="bg-zinc-900 text-foreground text-zinc-100">
         {pathname !== "/" && (
           <nav className="w-full bg-zinc-900 flex mb-2 py-1 px-2">
             <div className="w-full max-w-screen-xl mx-auto">

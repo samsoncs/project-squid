@@ -8,6 +8,7 @@ import {
   nextUnstartedGameFetcher,
   nextUnstartedGameFetcherKey,
 } from "./nextUnstartedGameFetcher";
+import Button from "@/components/Button";
 
 const supabase = createClient();
 
@@ -36,7 +37,7 @@ const Admin = () => {
 
   const { data, isLoading, error } = useSWR(
     nextUnstartedGameFetcherKey,
-    nextUnstartedGameFetcher,
+    nextUnstartedGameFetcher
   );
 
   if (isLoading) {
@@ -62,12 +63,7 @@ const Admin = () => {
             Game {data.game_id} - {data.name}
           </label>
 
-          <button
-            className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
-            type="submit"
-          >
-            Start Game
-          </button>
+          <Button type="submit" name="Start Game" />
           {completeError && (
             <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
           )}

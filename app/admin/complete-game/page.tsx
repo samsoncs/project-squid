@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import useSWR, { mutate } from "swr";
 import { teamsFetcherKey, teamsFetcher } from "./teamsFetcher";
+import Button from "@/components/Button";
 
 const supabase = createClient();
 
@@ -29,7 +30,7 @@ const Admin = () => {
     }
 
     const resultList = data?.teams.map((_, idx) =>
-      Number.parseInt(formData.get(`${idx + 1}Place`) as string),
+      Number.parseInt(formData.get(`${idx + 1}Place`) as string)
     );
 
     const { error } = await supabase.rpc("complete_game", {
@@ -98,12 +99,7 @@ const Admin = () => {
         </>
       ))}
 
-      <button
-        className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
-        type="submit"
-      >
-        Complete Game
-      </button>
+      <Button type="submit" name="Complete game" />
       {completeError && (
         <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
       )}

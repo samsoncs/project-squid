@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { FormEvent } from "react";
+import Button from "./Button";
 
 const supabase = createClient();
 
@@ -43,9 +44,7 @@ const Login = () => {
         placeholder="••••••••"
         required
       />
-      <button className="p-4 bg-primary-600 rounded-md" type="submit">
-        Log in
-      </button>
+      <Button type="submit" name="Log in" />
     </form>
   );
 };

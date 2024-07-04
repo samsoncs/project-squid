@@ -1,4 +1,4 @@
-import { pink, cyan, zinc } from 'tailwindcss/colors';
+import { pink, cyan } from 'tailwindcss/colors';
 
 
 /** @type {import('tailwindcss').Config} */
@@ -7,10 +7,17 @@ export const content = [
   "./components/**/*.{js,ts,jsx,tsx,mdx}",
 ];
 export const theme = {
-  colors: {
-    primary: pink,
-    secondary: cyan,
-    background: zinc
-  }
+  extend: {
+    colors: {
+      primary: pink,
+      secondary: cyan,
+      background: "hsl(var(--background))",
+      foreground: "hsl(var(--foreground))",
+      btn: {
+        background: "hsl(var(--btn-background))",
+        "background-hover": "hsl(var(--btn-background-hover))",
+      },
+    },
+  },
 };
 export const plugins = [];

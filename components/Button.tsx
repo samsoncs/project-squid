@@ -1,13 +1,19 @@
+import { MouseEventHandler } from "react";
+
 interface Props {
-  type: "button" | "submit" | "reset" | undefined;
+  type?: "button" | "submit" | "reset";
+  name: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  size?: "sm" | "md";
 }
 
-const Button: React.FC<Props> = ({ type }) => (
+const Button: React.FC<Props> = ({ type, name, onClick, size = "md" }) => (
   <button
-    className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
+    className={`${size === "sm" && "p-2"} ${size === "md" && "p-4"} text-lg bg-primary-600 rounded-md`}
     type={type}
+    onClick={onClick}
   >
-    Complete Game
+    {name}
   </button>
 );
 
