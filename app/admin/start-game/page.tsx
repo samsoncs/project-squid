@@ -3,31 +3,13 @@ import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import useSWR, { Fetcher, mutate } from "swr";
+import useSWR, { mutate } from "swr";
+import {
+  nextUnstartedGameFetcher,
+  nextUnstartedGameFetcherKey,
+} from "./nextUnstartedGameFetcher";
 
 const supabase = createClient();
-
-type Game = {
-  game_id: number;
-  is_started: boolean;
-  name: string;
-};
-
-const nextUnstartedGameFetcher: Fetcher<Game | undefined, string> = async (
-  _: string
-) => {
-  const games = await supabase.from("game").select("game_id, is_started, name");
-
-  if (games.error) {
-    const err = new Error(games.error.message);
-    err.name = games.error.hint;
-    throw err;
-  }
-
-  return (games.data as Game[])
-    .sort((a, b) => a.game_id - b.game_id)
-    .find((g) => !g.is_started);
-};
 
 const Admin = () => {
   const [completeError, setCompleteError] = useState<string | undefined>();
@@ -53,7 +35,7 @@ const Admin = () => {
   }
 
   const { data, isLoading, error } = useSWR(
-    "fetchGamesStartState",
+    nextUnstartedGameFetcherKey,
     nextUnstartedGameFetcher
   );
 

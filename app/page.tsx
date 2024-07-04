@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 const AnimatedCircle = () => (
@@ -21,7 +21,6 @@ const AnimatedCircle = () => (
       animate={{ pathLength: 1.01 }}
       transition={{
         duration: 0.8,
-        // opacity: { duration: 0.01 },
       }}
     />
   </svg>
