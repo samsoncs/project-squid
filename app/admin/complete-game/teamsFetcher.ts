@@ -22,7 +22,9 @@ type TeamsAndGames = {
   games: Game[];
 };
 
-export const teamsFetcher: Fetcher<TeamsAndGames, string> = async (_: string) => {
+export const teamsFetcher: Fetcher<TeamsAndGames, string> = async (
+  _: string,
+) => {
   const teams = await supabase.from("team").select("team_id, name");
   const games = await supabase
     .from("game")

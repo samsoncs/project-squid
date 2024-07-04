@@ -14,12 +14,12 @@ const supabase = createClient();
 
 const Dashboard = () => {
   const [currentTab, setCurrentTab] = useState<"games" | "leaderboard">(
-    "leaderboard"
+    "leaderboard",
   );
 
   const { data, isLoading, error } = useSWR(
     hasTeamTokenFetcherKey,
-    hasTeamTokenFetcher
+    hasTeamTokenFetcher,
   );
 
   return (

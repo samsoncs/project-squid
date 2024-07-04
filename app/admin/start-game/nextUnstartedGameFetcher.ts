@@ -11,9 +11,10 @@ type Game = {
   name: string;
 };
 
-export const nextUnstartedGameFetcher: Fetcher<Game | undefined, string> = async (
-  _: string
-) => {
+export const nextUnstartedGameFetcher: Fetcher<
+  Game | undefined,
+  string
+> = async (_: string) => {
   const games = await supabase.from("game").select("game_id, is_started, name");
 
   if (games.error) {

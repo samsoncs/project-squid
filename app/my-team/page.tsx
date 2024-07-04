@@ -17,7 +17,7 @@ const supabase = createClient();
 const Page = () => {
   const { data, isLoading, error } = useSWR(
     teamTokenFetcherKey,
-    teamTokenFetcher
+    teamTokenFetcher,
   );
   const [selectedToken, setSelectedToken] = useState<Token | undefined>();
   const [completeError, setCompleteError] = useState<string | undefined>();

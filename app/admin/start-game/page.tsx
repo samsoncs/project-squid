@@ -36,7 +36,7 @@ const Admin = () => {
 
   const { data, isLoading, error } = useSWR(
     nextUnstartedGameFetcherKey,
-    nextUnstartedGameFetcher
+    nextUnstartedGameFetcher,
   );
 
   if (isLoading) {

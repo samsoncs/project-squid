@@ -35,7 +35,7 @@ export const gamesFetcher: Fetcher<Games, string> = async (_: string) => {
 
   const resultsByGame = Object.groupBy(
     data as LeaderBoardFromDatabase[],
-    (f) => f.game_name
+    (f) => f.game_name,
   );
   const keys = Object.keys(resultsByGame).filter((k) => k !== "null");
   const result: Games = {

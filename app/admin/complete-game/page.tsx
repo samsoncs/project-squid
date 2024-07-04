@@ -29,7 +29,7 @@ const Admin = () => {
     }
 
     const resultList = data?.teams.map((_, idx) =>
-      Number.parseInt(formData.get(`${idx + 1}Place`) as string)
+      Number.parseInt(formData.get(`${idx + 1}Place`) as string),
     );
 
     const { error } = await supabase.rpc("complete_game", {

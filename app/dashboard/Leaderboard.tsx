@@ -86,7 +86,7 @@ const Leaderboard = () => {
                             textColor="text-zinc-100"
                             color="border-zinc-800"
                           />
-                        )
+                        ),
                       )}
                     </div>
                   </div>
