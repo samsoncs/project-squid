@@ -3,7 +3,7 @@ const Token: React.FC<{ color: string; textColor: string }> = ({
   textColor,
 }) => (
   <div
-    className={`rounded-full border-2 text-md ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
+    className={`text-md rounded-full border-2 ${textColor} flex h-5 w-5 items-center justify-center font-bold ${color}`}
   >
     ?
   </div>

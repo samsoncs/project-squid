@@ -40,7 +40,7 @@ export default function RootLayout({
     if (!pathname.endsWith("login") && pathname !== "/") {
       return (
         <html lang="en" className={GeistSans.className}>
-          <body className="bg-zinc-900 text-foreground text-zinc-100 pt-10 flex justify-center items-center">
+          <body className="flex items-center justify-center bg-zinc-900 pt-10 text-foreground text-zinc-100">
             <Login />
           </body>
         </html>
@@ -52,8 +52,8 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-zinc-900 text-foreground text-zinc-100">
         {pathname !== "/" && (
-          <nav className="w-full bg-zinc-900 flex mb-2 py-1 px-2">
-            <div className="w-full max-w-screen-xl mx-auto">
+          <nav className="mb-2 flex w-full bg-zinc-900 px-2 py-1">
+            <div className="mx-auto w-full max-w-screen-xl">
               <div className="flex items-center">
                 <div className="grow">
                   <Link href="/dashboard">
@@ -101,7 +101,7 @@ export default function RootLayout({
             </div>
           </nav>
         )}
-        <main className="w-full max-w-screen-xl mx-auto">
+        <main className="mx-auto w-full max-w-screen-xl">
           <div className="mx-2">
             {!isLoading && (
               <AuthContext.Provider value={{ session }}>

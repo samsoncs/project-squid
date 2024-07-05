@@ -9,7 +9,7 @@ interface Props {
 
 const Button: React.FC<Props> = ({ type, name, onClick, size = "md" }) => (
   <button
-    className={`${size === "sm" && "px-2 py-1 text-md"} ${size === "md" && "p-4"} text-lg bg-primary-600 rounded-md`}
+    className={`${size === "sm" && "text-md px-2 py-1"} ${size === "md" && "p-4"} rounded-md bg-primary-600 text-lg`}
     type={type}
     onClick={onClick}
   >

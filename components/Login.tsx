@@ -25,7 +25,7 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col w-96 px-2">
+    <form onSubmit={onSubmit} className="flex w-96 flex-col px-2">
       <label className="text-zinc-400" htmlFor="email">
         Email
       </label>

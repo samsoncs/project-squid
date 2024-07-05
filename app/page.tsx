@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const AnimatedCircle = () => (
   <svg
-    className="w-16 h-16 stroke-zinc-400"
+    className="h-16 w-16 stroke-zinc-400"
     width="52"
     height="52"
     viewBox="0 0 52 52"
@@ -28,7 +28,7 @@ const AnimatedCircle = () => (
 
 const AnimatedTriangle = () => (
   <svg
-    className="w-16 h-16 stroke-secondary-500"
+    className="h-16 w-16 stroke-secondary-500"
     width="52"
     height="46"
     viewBox="0 0 52 46"
@@ -48,7 +48,7 @@ const AnimatedTriangle = () => (
 
 const AnimatedSquare = () => (
   <svg
-    className="w-16 h-16 stroke-pink-600"
+    className="h-16 w-16 stroke-pink-600"
     width="50"
     height="50"
     viewBox="0 0 50 50"
@@ -72,16 +72,16 @@ const AnimatedSquare = () => (
 
 const Index = () => {
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex h-screen flex-col items-center justify-center">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="text-2xl text-zinc-400 font-bold mb-2"
+        className="mb-2 text-2xl font-bold text-zinc-400"
       >
         Do you dare to play?
       </motion.h1>
-      <div className="mb-6 flex gap-2 justify-between pb-2">
+      <div className="mb-6 flex justify-between gap-2 pb-2">
         <AnimatedCircle />
         <AnimatedTriangle />
         <AnimatedSquare />
@@ -92,7 +92,7 @@ const Index = () => {
         transition={{ duration: 1, delay: 0.8 }}
       >
         <Link
-          className="p-4 text-lg bg-primary-600 rounded-md"
+          className="rounded-md bg-primary-600 p-4 text-lg"
           href="/dashboard"
         >
           Enter

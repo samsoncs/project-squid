@@ -1,5 +1,4 @@
-import { pink, cyan } from 'tailwindcss/colors';
-
+import { pink, cyan } from "tailwindcss/colors";
 
 /** @type {import('tailwindcss').Config} */
 export const content = [

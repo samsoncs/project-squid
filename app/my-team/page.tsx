@@ -19,7 +19,7 @@ const supabase = createClient();
 const Page = () => {
   const { data, isLoading, error } = useSWR(
     teamTokenFetcherKey,
-    teamTokenFetcher
+    teamTokenFetcher,
   );
   const [selectedToken, setSelectedToken] = useState<Token | undefined>();
   const [completeError, setCompleteError] = useState<string | undefined>();
@@ -77,7 +77,7 @@ const Page = () => {
                   {selectedToken.token_type === "REVERSE" && <>Reverse</>}
                 </div>
                 <label
-                  className="text-zinc-400 pb-1"
+                  className="pb-1 text-zinc-400"
                   htmlFor="gameWeek"
                 ></label>
 
@@ -93,14 +93,14 @@ const Page = () => {
                 <Button type="submit" name="Use Token" size="sm" />
               </form>
               {completeError && (
-                <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
+                <div className="rounded-md bg-red-500 p-4">{completeError}</div>
               )}
             </div>
           </Card>
         )}
         {!selectedToken &&
           data?.tokens.tokens_available.map((t) => (
-            <div className="bg-primary-800 rounded-md p-2 px-3">
+            <div className="rounded-md bg-primary-800 p-2 px-3">
               <div className="flex items-center">
                 <div className="grow">
                   {t.token_type === "DOUBLE_TROUBLE" && <>Double trouble</>}
