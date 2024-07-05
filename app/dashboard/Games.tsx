@@ -5,6 +5,8 @@ import useSWR from "swr";
 import Square from "./icons/Square";
 import Check from "./icons/Check";
 import { gamesFetcher, gamesFetcherKey } from "./fetchers/gamesFetcher";
+import Triangle from "./icons/Triangle";
+import Circle from "./icons/Circle";
 
 const Games = () => {
   const { data, isLoading, error } = useSWR(gamesFetcherKey, gamesFetcher);
@@ -39,7 +41,7 @@ const Games = () => {
 
               {!isLoading &&
                 !error &&
-                data!.upcoming?.map((u) => (
+                data!.upcoming?.map((u, idx) => (
                   <Card key={u.gameName}>
                     <div className="grid grid-cols-12 px-4">
                       <div className="col-span-2 text-3xl font-bold flex items-center justify-start">
@@ -49,10 +51,13 @@ const Games = () => {
                         {u.gameName}
                       </div>
                       <div className="col-span-3 flex justify-end">
-                        {u.isSquidGame && <Square />}
-                        {/* {u.token === "circle" && <Circle />}
-                {u.token === "square" && <Square />}
-                {u.token === "triangle" && <Triangle />} */}
+                        {u.isSquidGame && (
+                          <>
+                            {idx % 3 === 0 && <Square />}
+                            {(idx + 2) % 3 === 0 && <Circle />}
+                            {(idx + 1) % 3 === 0 && <Triangle />}
+                          </>
+                        )}
                       </div>
                     </div>
                   </Card>

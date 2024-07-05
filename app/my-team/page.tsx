@@ -5,7 +5,7 @@ import Header3 from "@/components/Header3";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
 import { FormEvent, useState } from "react";
-import useSWR, { Fetcher, mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import {
   teamTokenFetcher,
   teamTokenFetcherKey,
