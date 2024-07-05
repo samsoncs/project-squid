@@ -96,7 +96,9 @@ const Games = () => {
                   <div className="text-zinc-400">{g.order}</div>
                 </div>
                 <div className="col-span-10 flex flex-col lg:col-span-11">
-                  <div className="text-md mb-1 font-bold">{g.gameName}</div>
+                  <div className="text-md mb-1 font-bold text-zinc-400">
+                    {g.gameName}
+                  </div>
                   <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
                     {g.firstPlacePoints && (
                       <>
@@ -108,9 +110,7 @@ const Games = () => {
                             <div className="h-3 w-32 rounded-md bg-primary-500" />
                           </div>
                           <div className="flex gap-2">
-                            <div className="w-10 text-zinc-400">
-                              {g.firstPlacePoints} pts
-                            </div>
+                            <div className="w-10">{g.firstPlacePoints} pts</div>
                             <div>{g.firstPlace}</div>
                           </div>
                         </div>
@@ -122,7 +122,7 @@ const Games = () => {
                             <div className="h-3 w-20 rounded-md bg-secondary-500" />
                           </div>
                           <div className="flex gap-2">
-                            <div className="w-10 text-zinc-400">
+                            <div className="w-10">
                               {g.secondPlacePoints} pts
                             </div>
                             <div>{g.secondPlace}</div>
@@ -136,9 +136,7 @@ const Games = () => {
                             <div className="h-3 w-5 rounded-md bg-zinc-400" />
                           </div>
                           <div className="flex gap-2">
-                            <div className="w-10 text-zinc-400">
-                              {g.thirdPlacePoints} pts
-                            </div>
+                            <div className="w-10">{g.thirdPlacePoints} pts</div>
                             <div>{g.thirdPlace}</div>
                           </div>
                         </div>
