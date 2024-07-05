@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 const AnimatedCircle = () => (
@@ -21,7 +21,6 @@ const AnimatedCircle = () => (
       animate={{ pathLength: 1.01 }}
       transition={{
         duration: 0.8,
-        // opacity: { duration: 0.01 },
       }}
     />
   </svg>
@@ -29,7 +28,7 @@ const AnimatedCircle = () => (
 
 const AnimatedTriangle = () => (
   <svg
-    className="w-16 h-16 stroke-cyan-500"
+    className="w-16 h-16 stroke-secondary-500"
     width="52"
     height="46"
     viewBox="0 0 52 46"
@@ -82,7 +81,7 @@ const Index = () => {
       >
         Do you dare to play?
       </motion.h1>
-      <div className="mb-6 flex gap-2 justify-between">
+      <div className="mb-6 flex gap-2 justify-between pb-2">
         <AnimatedCircle />
         <AnimatedTriangle />
         <AnimatedSquare />
@@ -92,7 +91,10 @@ const Index = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.8 }}
       >
-        <Link className="p-4 text-lg bg-pink-600 rounded-md" href="/dashboard">
+        <Link
+          className="p-4 text-lg bg-primary-600 rounded-md"
+          href="/dashboard"
+        >
           Enter
         </Link>
       </motion.div>

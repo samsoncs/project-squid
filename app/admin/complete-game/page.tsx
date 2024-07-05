@@ -3,50 +3,12 @@ import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import useSWR, { Fetcher, mutate } from "swr";
+import useSWR, { mutate } from "swr";
+import { teamsFetcherKey, teamsFetcher } from "./teamsFetcher";
+import Button from "@/components/Button";
+import Select from "@/components/form/Select";
 
 const supabase = createClient();
-
-type Team = {
-  team_id: number;
-  name: string;
-};
-
-type Game = {
-  game_id: number;
-  name: string;
-  completed: boolean;
-  is_started: boolean;
-};
-
-type TeamsAndGames = {
-  teams: Team[];
-  games: Game[];
-};
-
-const teamsFetcher: Fetcher<TeamsAndGames, string> = async (_: string) => {
-  const teams = await supabase.from("team").select("team_id, name");
-  const games = await supabase
-    .from("game")
-    .select("game_id, name, completed, is_started");
-
-  if (teams.error) {
-    const err = new Error(teams.error.message);
-    err.name = teams.error.hint;
-    throw err;
-  }
-
-  if (games.error) {
-    const err = new Error(games.error.message);
-    err.name = games.error.hint;
-    throw err;
-  }
-
-  return {
-    teams: teams.data as Team[],
-    games: (games.data as Game[]).filter((g) => g.is_started),
-  };
-};
 
 const Admin = () => {
   const [completeError, setCompleteError] = useState<string | undefined>();
@@ -86,7 +48,7 @@ const Admin = () => {
     }
   }
 
-  const { data, isLoading, error } = useSWR("fetchTeam", teamsFetcher);
+  const { data, isLoading, error } = useSWR(teamsFetcherKey, teamsFetcher);
 
   if (isLoading) {
     return (
@@ -109,41 +71,33 @@ const Admin = () => {
         Game
       </label>
 
-      <select
-        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+      <Select
         name="game"
-      >
-        {data?.games
+        options={data!.games
           .sort((a, b) => b.game_id - a.game_id)
-          .map((g) => (
-            <option value={g.game_id}>
-              {g.game_id} - {g.name} {g.completed && "- Completed"}
-            </option>
-          ))}
-      </select>
+          .map((g) => ({
+            id: g.game_id.toString(),
+            name: `${g.game_id} - ${g.name} ${g.completed && "- Completed"}`,
+          }))}
+      />
 
       {data?.teams.map((t, idx) => (
         <>
           <label className="text-zinc-400 pb-1" htmlFor={`${idx + 1}Place`}>
             {idx + 1}. place
           </label>
-          <select
-            className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+
+          <Select
             name={`${idx + 1}Place`}
-          >
-            {data?.teams.map((t) => (
-              <option value={t.team_id}>{t.name}</option>
-            ))}
-          </select>
+            options={data!.teams.map((t) => ({
+              id: t.team_id.toString(),
+              name: t.name,
+            }))}
+          />
         </>
       ))}
 
-      <button
-        className="p-4 text-zinc-400 text-lg bg-zinc-800 rounded-md"
-        type="submit"
-      >
-        Complete Game
-      </button>
+      <Button type="submit" name="Complete game" />
       {completeError && (
         <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
       )}

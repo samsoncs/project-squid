@@ -5,66 +5,22 @@ import Header3 from "@/components/Header3";
 import LoadingCard from "@/components/LoadingCard";
 import { createClient } from "@/utils/supabase/client";
 import { FormEvent, useState } from "react";
-import useSWR, { Fetcher, mutate } from "swr";
-
-type Token = {
-  token_type: "DOUBLE_TROUBLE" | "REVERSE";
-  tokens_available_id: number;
-};
-
-type TeamToken = {
-  team_id: number;
-  name: string;
-  tokens_available: Token[];
-};
-
-type Game = {
-  game_id: number;
-  name: string;
-};
-
-type TeamTokenAndGames = {
-  tokens: TeamToken;
-  games: Game[];
-};
+import useSWR, { mutate } from "swr";
+import {
+  teamTokenFetcher,
+  teamTokenFetcherKey,
+  Token,
+} from "./teamTokenFetcher";
+import Button from "@/components/Button";
+import Select from "@/components/form/Select";
 
 const supabase = createClient();
 
-const teamTokenFetcher: Fetcher<TeamTokenAndGames, string> = async (
-  _: string
-) => {
-  const team_id = (await supabase.auth.getSession()).data.session?.user
-    .app_metadata.team as number;
-
-  const { data, error } = await supabase
-    .from("team")
-    .select("team_id, name, tokens_available(tokens_available_id, token_type)");
-
-  if (error) {
-    const err = new Error(error.message);
-    err.name = error.hint;
-    throw err;
-  }
-
-  const games = await supabase
-    .from("game")
-    .select("game_id, name")
-    .eq("is_started", false);
-
-  if (games.error) {
-    const err = new Error(games.error.message);
-    err.name = games.error.hint;
-    throw err;
-  }
-
-  return {
-    tokens: data.find((d) => (d.team_id = team_id)) as TeamToken,
-    games: games.data as Game[],
-  };
-};
-
 const Page = () => {
-  const { data, isLoading, error } = useSWR("teamTokens", teamTokenFetcher);
+  const { data, isLoading, error } = useSWR(
+    teamTokenFetcherKey,
+    teamTokenFetcher
+  );
   const [selectedToken, setSelectedToken] = useState<Token | undefined>();
   const [completeError, setCompleteError] = useState<string | undefined>();
 
@@ -124,21 +80,17 @@ const Page = () => {
                   className="text-zinc-400 pb-1"
                   htmlFor="gameWeek"
                 ></label>
+
                 <div>
-                  <select
-                    className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+                  <Select
                     name="game"
-                  >
-                    {data?.games.map((g) => (
-                      <option value={g.game_id}>
-                        {g.game_id} - {g.name}
-                      </option>
-                    ))}
-                  </select>
+                    options={data!.games.map((g) => ({
+                      id: g.game_id.toString(),
+                      name: `${g.game_id} - ${g.name}`,
+                    }))}
+                  />
                 </div>
-                <button type="submit" className="bg-pink-600 rounded-md p-2">
-                  Use token
-                </button>
+                <Button type="submit" name="Use Token" size="sm" />
               </form>
               {completeError && (
                 <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
@@ -148,18 +100,18 @@ const Page = () => {
         )}
         {!selectedToken &&
           data?.tokens.tokens_available.map((t) => (
-            <div className="bg-pink-800 rounded-md p-2 px-3">
+            <div className="bg-primary-800 rounded-md p-2 px-3">
               <div className="flex items-center">
                 <div className="grow">
                   {t.token_type === "DOUBLE_TROUBLE" && <>Double trouble</>}
                   {t.token_type === "REVERSE" && <>Reverse</>}
                 </div>
-                <button
+
+                <Button
+                  name="Use"
                   onClick={() => setSelectedToken(t)}
-                  className="flex items-center justify-center px-2 py-1 rounded-md bg-pink-600"
-                >
-                  Use
-                </button>
+                  size="sm"
+                />
               </div>
             </div>
           ))}

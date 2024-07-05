@@ -1,5 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { FormEvent } from "react";
+import Button from "./Button";
+import Input from "./form/Input";
 
 const supabase = createClient();
 
@@ -27,25 +29,12 @@ const Login = () => {
       <label className="text-zinc-400" htmlFor="email">
         Email
       </label>
-      <input
-        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
-        name="email"
-        placeholder="you@example.com"
-        required
-      />
+      <Input name="email" placeholder="you@example.com" required />
       <label className="text-zinc-400" htmlFor="password">
         Password
       </label>
-      <input
-        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
-        type="password"
-        name="password"
-        placeholder="••••••••"
-        required
-      />
-      <button className="p-4 bg-pink-600 rounded-md" type="submit">
-        Log in
-      </button>
+      <Input type="password" name="password" placeholder="••••••••" required />
+      <Button type="submit" name="Log in" />
     </form>
   );
 };
