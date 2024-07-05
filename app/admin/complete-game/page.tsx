@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 import useSWR, { mutate } from "swr";
 import { teamsFetcherKey, teamsFetcher } from "./teamsFetcher";
 import Button from "@/components/Button";
+import Select from "@/components/form/Select";
 
 const supabase = createClient();
 
@@ -70,32 +71,29 @@ const Admin = () => {
         Game
       </label>
 
-      <select
-        className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+      <Select
         name="game"
-      >
-        {data?.games
+        options={data!.games
           .sort((a, b) => b.game_id - a.game_id)
-          .map((g) => (
-            <option value={g.game_id}>
-              {g.game_id} - {g.name} {g.completed && "- Completed"}
-            </option>
-          ))}
-      </select>
+          .map((g) => ({
+            id: g.game_id.toString(),
+            name: `${g.game_id} - ${g.name} ${g.completed && "- Completed"}`,
+          }))}
+      />
 
       {data?.teams.map((t, idx) => (
         <>
           <label className="text-zinc-400 pb-1" htmlFor={`${idx + 1}Place`}>
             {idx + 1}. place
           </label>
-          <select
-            className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+
+          <Select
             name={`${idx + 1}Place`}
-          >
-            {data?.teams.map((t) => (
-              <option value={t.team_id}>{t.name}</option>
-            ))}
-          </select>
+            options={data!.teams.map((t) => ({
+              id: t.team_id.toString(),
+              name: t.name,
+            }))}
+          />
         </>
       ))}
 

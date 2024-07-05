@@ -12,6 +12,7 @@ import {
   Token,
 } from "./teamTokenFetcher";
 import Button from "@/components/Button";
+import Select from "@/components/form/Select";
 
 const supabase = createClient();
 
@@ -79,17 +80,15 @@ const Page = () => {
                   className="text-zinc-400 pb-1"
                   htmlFor="gameWeek"
                 ></label>
+
                 <div>
-                  <select
-                    className="bg-zinc-800 focus:outline-none focus:border-zinc-600 focus:ring-2 focus:ring-zinc-600 rounded-md px-4 py-2 mb-6"
+                  <Select
                     name="game"
-                  >
-                    {data?.games.map((g) => (
-                      <option value={g.game_id}>
-                        {g.game_id} - {g.name}
-                      </option>
-                    ))}
-                  </select>
+                    options={data!.games.map((g) => ({
+                      id: g.game_id.toString(),
+                      name: `${g.game_id} - ${g.name}`,
+                    }))}
+                  />
                 </div>
                 <Button type="submit" name="Use Token" size="sm" />
               </form>
