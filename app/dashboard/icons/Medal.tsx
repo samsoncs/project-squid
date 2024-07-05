@@ -4,7 +4,7 @@ const Medal: React.FC<{ color: string; textColor: string; pos: number }> = ({
   textColor,
 }) => (
   <div
-    className={`rounded-full pr-[1px] border-2 text-sm ${textColor} w-5 h-5 font-bold flex justify-center items-center ${color}`}
+    className={`rounded-full border-2 pr-[1px] text-sm ${textColor} flex h-5 w-5 items-center justify-center font-bold ${color}`}
   >
     {pos}
   </div>

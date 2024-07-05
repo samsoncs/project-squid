@@ -37,7 +37,7 @@ const Admin = () => {
 
   const { data, isLoading, error } = useSWR(
     nextUnstartedGameFetcherKey,
-    nextUnstartedGameFetcher
+    nextUnstartedGameFetcher,
   );
 
   if (isLoading) {
@@ -59,16 +59,16 @@ const Admin = () => {
     <>
       {data && (
         <form onSubmit={onSubmit} className="flex flex-col gap-1">
-          <label className="text-zinc-400 pb-1" htmlFor="game">
+          <label className="pb-1 text-zinc-400" htmlFor="game">
             Game {data.game_id} - {data.name}
           </label>
 
           <Button type="submit" name="Start Game" />
           {completeError && (
-            <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
+            <div className="rounded-md bg-red-500 p-4">{completeError}</div>
           )}
           {haveClickedSubmit && !completeError && (
-            <div className="p-4 bg-green-500 rounded-md">
+            <div className="rounded-md bg-green-500 p-4">
               Game successfully started
             </div>
           )}

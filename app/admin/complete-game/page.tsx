@@ -31,7 +31,7 @@ const Admin = () => {
     }
 
     const resultList = data?.teams.map((_, idx) =>
-      Number.parseInt(formData.get(`${idx + 1}Place`) as string)
+      Number.parseInt(formData.get(`${idx + 1}Place`) as string),
     );
 
     const { error } = await supabase.rpc("complete_game", {
@@ -67,7 +67,7 @@ const Admin = () => {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-1">
-      <label className="text-zinc-400 pb-1" htmlFor="game">
+      <label className="pb-1 text-zinc-400" htmlFor="game">
         Game
       </label>
 
@@ -83,7 +83,7 @@ const Admin = () => {
 
       {data?.teams.map((t, idx) => (
         <>
-          <label className="text-zinc-400 pb-1" htmlFor={`${idx + 1}Place`}>
+          <label className="pb-1 text-zinc-400" htmlFor={`${idx + 1}Place`}>
             {idx + 1}. place
           </label>
 
@@ -99,10 +99,10 @@ const Admin = () => {
 
       <Button type="submit" name="Complete game" />
       {completeError && (
-        <div className="p-4 bg-red-500 rounded-md">{completeError}</div>
+        <div className="rounded-md bg-red-500 p-4">{completeError}</div>
       )}
       {haveClickedSubmit && !completeError && (
-        <div className="p-4 bg-green-500 rounded-md">
+        <div className="rounded-md bg-green-500 p-4">
           Game successfully completed
         </div>
       )}
