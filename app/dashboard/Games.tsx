@@ -21,7 +21,7 @@ const Games = () => {
             </div>
 
             <div className="flex flex-col gap-2 mb-6">
-              <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-6">
+              <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
                 <div className="col-span-2 lg:col-span-1 text-zinc-400">
                   Order
                 </div>
@@ -45,7 +45,7 @@ const Games = () => {
                 !error &&
                 data!.upcoming?.map((u, idx) => (
                   <Card key={u.gameName}>
-                    <div className="grid grid-cols-12 px-4">
+                    <div className="grid grid-cols-12 px-4 lg:px-5">
                       <div className="col-span-2 lg:col-span-1 text-3xl font-bold flex items-center justify-start">
                         <div>{u.order}</div>
                       </div>
@@ -73,7 +73,7 @@ const Games = () => {
       </div>
 
       <div className="flex flex-col gap-2 mb-4">
-        <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-6">
+        <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
           <div className="col-span-2 lg:col-span-1 text-zinc-400">Order</div>
           <div className="col-span-8 text-zinc-400">Game</div>
           <div className="col-span-2 lg:col-span-3 flex justify-end text-zinc-400">
@@ -94,7 +94,7 @@ const Games = () => {
           !error &&
           data!.completed?.map((g) => (
             <Card key={g.gameName}>
-              <div className="grid grid-cols-12 px-4">
+              <div className="grid grid-cols-12 px-4 lg:px-5">
                 <div className="col-span-2 lg:col-span-1 text-3xl font-bold flex items-center justify-start">
                   <div>{g.order}</div>
                 </div>

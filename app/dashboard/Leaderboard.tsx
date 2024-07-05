@@ -18,7 +18,7 @@ const Leaderboard = () => {
         <Header3 title="Leaderboard" />
       </div>
       <div className="flex flex-col gap-2">
-        <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-6">
+        <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
           <div className="col-span-2 lg:col-span-1 text-zinc-400">#</div>
           <div className="col-span-8 lg:col-span-9 text-zinc-400">Team</div>
           <div className="col-span-2 flex justify-end text-zinc-400">
@@ -41,7 +41,7 @@ const Leaderboard = () => {
             .sort((a, b) => b.score - a.score)
             .map((r, idx) => (
               <Card key={`list-${r.teamName}${idx}`}>
-                <div className="grid grid-cols-12 px-4">
+                <div className="grid grid-cols-12 px-4 lg:px-5">
                   <div className="col-span-2 lg:col-span-1 text-3xl font-bold flex items-center justify-start">
                     <div>{idx + 1}</div>
                   </div>
