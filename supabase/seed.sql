@@ -7,12 +7,16 @@ values
 
 insert into game(game_id, "name", is_squid_game)
 values
-(1, 'The cookie cutter', true),
-(2, 'Running', false),
-(3, 'Skiing', true),
-(4, 'Go Kart', false),
-(5, 'Skipping rope', false),
-(6, 'Dancing', true);
+(1, 'Go Kart', true),
+(2, 'The Name of the Game', false), -- Lagnatn
+(3, 'Elctrofootbell', true),
+(4, 'Penalties', false),
+(5, 'Human Sokoban', false), -- Rutenett
+(6, 'Shocking Truth', true), -- Quiz
+(7, 'Battleship', true),
+(8, 'Emoji Quiz', true),
+(9, 'Rock, Paper, Scissor', true),
+(10, 'Haggle', true);
 
 insert into starting_tokens(token_type)
 values

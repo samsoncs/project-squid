@@ -9,6 +9,7 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "10.4.17",
+    "date-fns": "^3.6.0",
     "framer-motion": "^11.2.10",
     "geist": "^1.2.1",
     "next": "latest",
