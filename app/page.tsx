@@ -191,35 +191,36 @@ const Index = () => {
         </div>
       )}
 
-      {timeToLaunch.days && timeToLaunch.days <= 0 && (
-        <>
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="mb-2 text-2xl font-bold text-zinc-400"
-          >
-            Do you dare to play?
-          </motion.h1>
-          <div className="mb-6 flex justify-between gap-2 pb-2">
-            <AnimatedCircle />
-            <AnimatedTriangle />
-            <AnimatedSquare />
-          </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            <Link
-              className="rounded-md bg-primary-600 p-4 text-lg"
-              href="/dashboard"
+      {!timeToLaunch.days ||
+        (timeToLaunch.days && timeToLaunch.days <= 0 && (
+          <>
+            <motion.h1
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="mb-2 text-2xl font-bold text-zinc-400"
             >
-              Enter
-            </Link>
-          </motion.div>
-        </>
-      )}
+              Do you dare to play?
+            </motion.h1>
+            <div className="mb-6 flex justify-between gap-2 pb-2">
+              <AnimatedCircle />
+              <AnimatedTriangle />
+              <AnimatedSquare />
+            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+            >
+              <Link
+                className="rounded-md bg-primary-600 p-4 text-lg"
+                href="/dashboard"
+              >
+                Enter
+              </Link>
+            </motion.div>
+          </>
+        ))}
     </div>
   );
 };
