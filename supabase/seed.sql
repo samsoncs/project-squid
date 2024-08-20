@@ -1,3 +1,12 @@
+-- Clean up
+delete from auth.users
+delete from starting_tokens;
+delete from tokens_available;
+delete from tokens_used;
+delete from game_round;
+delete from team;
+delete from game;
+
 insert into team(team_id, "name")
 values
 (1, 'Gangbu'),
