@@ -1,11 +1,14 @@
 import { createClient } from "@/utils/supabase/client";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Button from "./Button";
 import Input from "./form/Input";
+import { AuthError } from "@supabase/auth-js";
 
 const supabase = createClient();
 
 const Login = () => {
+  const [authError, setAuthError] = useState<AuthError | null>(null);
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -20,7 +23,7 @@ const Login = () => {
     });
 
     if (error) {
-      // TODO: Redirect to error page
+      setAuthError(error);
     }
   }
 
@@ -35,6 +38,7 @@ const Login = () => {
       </label>
       <Input type="password" name="password" placeholder="••••••••" required />
       <Button type="submit" name="Log in" />
+      {authError && <span className="text-red-500"> {authError.message} </span>}
     </form>
   );
 };
