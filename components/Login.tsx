@@ -1,11 +1,19 @@
 import { createClient } from "@/utils/supabase/client";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Button from "./Button";
 import Input from "./form/Input";
+import { AuthError } from "@supabase/auth-js";
+import { useSearchParams } from "next/navigation";
+import Header3 from "./Header3";
 
 const supabase = createClient();
 
 const Login = () => {
+  const [authError, setAuthError] = useState<AuthError | null>(null);
+
+  const search = useSearchParams();
+  const userName = search.get("username");
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -15,26 +23,32 @@ const Login = () => {
     const password = formData.get("password") as string;
 
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: userName ?? email,
       password,
     });
 
     if (error) {
-      // TODO: Redirect to error page
+      setAuthError(error);
     }
   }
 
   return (
     <form onSubmit={onSubmit} className="flex w-96 flex-col px-2">
-      <label className="text-zinc-400" htmlFor="email">
-        Email
-      </label>
-      <Input name="email" placeholder="you@example.com" required />
+      {userName && <Header3 title={`Welcome ${userName}`} />}
+      {!userName && (
+        <>
+          <label className="text-zinc-400" htmlFor="email">
+            Username
+          </label>
+          <Input name="email" placeholder="Gganbu" />
+        </>
+      )}
       <label className="text-zinc-400" htmlFor="password">
         Password
       </label>
       <Input type="password" name="password" placeholder="••••••••" required />
       <Button type="submit" name="Log in" />
+      {authError && <span className="text-red-500"> {authError.message} </span>}
     </form>
   );
 };
