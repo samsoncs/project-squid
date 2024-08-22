@@ -3,7 +3,7 @@ import Header3 from "@/components/Header3";
 import LoadingCard from "@/components/LoadingCard";
 import useSWR from "swr";
 import Square from "./icons/Square";
-import Check from "./icons/Check";
+import Image from "next/image";
 import { gamesFetcher, gamesFetcherKey } from "./fetchers/gamesFetcher";
 import Triangle from "./icons/Triangle";
 import Circle from "./icons/Circle";
@@ -50,7 +50,16 @@ const Games = () => {
                         <div>{u.order}</div>
                       </div>
                       <div className="text-md col-span-8 flex items-center font-bold">
-                        {u.gameName}
+                        <div className="flex items-center gap-4">
+                          <Image
+                            src={`${u.gameName.replaceAll(" ", "")}.webp`}
+                            height="100"
+                            width="100"
+                            alt={u.gameName}
+                            className="rounded-md"
+                          />
+                          {u.gameName}
+                        </div>
                       </div>
                       <div className="col-span-2 flex justify-end lg:col-span-3">
                         {u.isSquidGame && (

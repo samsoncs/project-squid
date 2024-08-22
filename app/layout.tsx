@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import Login from "@/components/Login";
 import Link from "next/link";
 import { AuthContext } from "@/components/utils/AuthContext";
+import Image from "next/image";
 
 const supabase = createClient();
 
@@ -55,22 +56,14 @@ export default function RootLayout({
           <nav className="mb-2 flex w-full bg-zinc-900 px-2 py-1">
             <div className="mx-auto w-full max-w-screen-xl">
               <div className="flex items-center">
-                <div className="grow">
+                <div className="grow p-2">
                   <Link href="/dashboard">
-                    <svg
-                      className="h-14 w-14"
-                      width="349"
-                      height="235"
-                      viewBox="0 0 349 235"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        className="stroke-primary-600"
-                        d="M314.5 25.5H176.104C174.093 25.5 172.14 26.1737 170.556 27.4137L64.5504 110.414C59.9483 114.017 59.9483 120.983 64.5504 124.586L170.556 207.586C172.14 208.826 174.093 209.5 176.104 209.5H314.5C319.471 209.5 323.5 205.471 323.5 200.5V34.5C323.5 29.5294 319.471 25.5 314.5 25.5Z"
-                        strokeWidth="30"
-                      />
-                    </svg>
+                    <Image
+                      src="/gos.svg"
+                      width="160"
+                      height="160"
+                      alt="Game of Squids"
+                    />
                   </Link>
                 </div>
                 <div className="flex gap-4">

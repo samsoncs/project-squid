@@ -1,11 +1,11 @@
 -- Clean up
---delete from auth.users
---delete from starting_tokens;
---delete from tokens_available;
---delete from tokens_used;
---delete from game_round;
---delete from team;
---delete from game;
+delete from auth.users;
+delete from starting_tokens;
+delete from tokens_available;
+delete from tokens_used;
+delete from game_round;
+delete from team;
+delete from game;
 
 insert into team(team_id, "name")
 values
@@ -16,7 +16,7 @@ values
 
 insert into game(game_id, "name", is_squid_game)
 values
-(1, 'Go Kart', true),
+(1, 'Human Mario Kart', true),
 (2, 'The Name of the Game', true),
 (3, 'Electrobubble Trouble', true),
 (4, 'Shock and score', true), -- Penalties
@@ -129,7 +129,7 @@ begin
     PERFORM create_user(UUID_GENERATE_V4(), 'ole', 'ol3ol3', 1);
     PERFORM create_user(UUID_GENERATE_V4(), 'anders_mk', '4ndymk', 1);
     PERFORM create_user(UUID_GENERATE_V4(), 'aksel', '4ks3!', 1);
-    PERFORM create_user(UUID_GENERATE_V4(), 'håkon', 'haak0n', 1);
+    PERFORM create_user(UUID_GENERATE_V4(), 'haakon', 'haak0n', 1);
     PERFORM create_user(UUID_GENERATE_V4(), 'jon', 'j0nny', 1);
     PERFORM create_user(UUID_GENERATE_V4(), 'eirik', '3!r!k', 1);
     PERFORM create_user(UUID_GENERATE_V4(), 'stian', 'st!4n!', 1);
