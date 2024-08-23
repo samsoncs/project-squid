@@ -1,5 +1,7 @@
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
 
+export const BASE_PATH = process.env.NODE_ENV === "production" ? "/project-squid" : "";
+
 // @ts-check
 export default (phase, { defaultConfig }) => {
   /**
@@ -28,8 +30,7 @@ export default (phase, { defaultConfig }) => {
    */
   const prodConfig = {
     ...commonConfig,
-    basePath: "/project-squid",
-    assetPrefix: "/project-squid/"
+    basePath: BASE_PATH
   };
   return prodConfig;
 };
