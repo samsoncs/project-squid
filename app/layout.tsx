@@ -57,7 +57,7 @@ export default function RootLayout({
           <nav className="mb-2 flex w-full bg-zinc-900 px-2 py-1">
             <div className="mx-auto w-full max-w-screen-xl">
               <div className="flex items-center">
-                <div className="grow p-2">
+                <div>
                   <Link href="/dashboard">
                     <Image
                       src={`${BASE_PATH}/gos.svg`}
@@ -67,6 +67,7 @@ export default function RootLayout({
                     />
                   </Link>
                 </div>
+                <div className="grow" />
                 <div className="flex gap-4">
                   {session &&
                     session.user.id ===

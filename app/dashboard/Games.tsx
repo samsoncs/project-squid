@@ -92,8 +92,8 @@ const Games = () => {
           !error &&
           data!.completed?.map((g) => (
             <Card key={g.gameName}>
-              <div className="flex gap-4 py-1">
-                <div className="flex flex-col gap-2 font-bold">
+              <div className="grid grid-cols-12 py-1">
+                <div className="col-span-7 flex flex-col font-bold">
                   <div className="text-md">
                     {g.order}. {g.gameName}
                   </div>
@@ -105,7 +105,7 @@ const Games = () => {
                     className="rounded-md"
                   />
                 </div>
-                <div className="flex flex-col">
+                <div className="col-span-5 flex flex-col">
                   <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
                     {g.firstPlacePoints && (
                       <>
