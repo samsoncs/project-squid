@@ -29,6 +29,7 @@ export default (phase, { defaultConfig }) => {
   const prodConfig = {
     ...commonConfig,
     basePath: "/project-squid",
+    assetPrefix: "/project-squid"
   };
   return prodConfig;
 };
