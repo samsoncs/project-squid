@@ -47,7 +47,7 @@ const Games = () => {
                       <div className="text-md col-span-10 flex items-center font-bold">
                         <div className="flex gap-4">
                           <Image
-                            src={`${BASE_PATH}/${u.gameName.replaceAll(" ", "")}.webp`}
+                            src={`${BASE_PATH}/${u.gameName.toLocaleLowerCase().replaceAll(" ", "")}.webp`}
                             height="100"
                             width="100"
                             alt={u.gameName}
@@ -98,7 +98,7 @@ const Games = () => {
                     {g.order}. {g.gameName}
                   </div>
                   <Image
-                    src={`${BASE_PATH}/${g.gameName.replaceAll(" ", "")}.webp`}
+                    src={`${BASE_PATH}/${g.gameName.toLocaleLowerCase().replaceAll(" ", "")}.webp`}
                     height="100"
                     width="100"
                     alt={g.gameName}
