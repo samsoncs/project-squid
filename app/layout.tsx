@@ -10,6 +10,7 @@ import Login from "@/components/Login";
 import Link from "next/link";
 import { AuthContext } from "@/components/utils/AuthContext";
 import Image from "next/image";
+import { BASE_PATH } from "../next.config.mjs";
 
 const supabase = createClient();
 
@@ -59,7 +60,7 @@ export default function RootLayout({
                 <div className="grow p-2">
                   <Link href="/dashboard">
                     <Image
-                      src="/gos.svg"
+                      src={`${BASE_PATH}/gos.svg`}
                       width="160"
                       height="160"
                       alt="Game of Squids"

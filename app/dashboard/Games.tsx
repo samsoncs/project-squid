@@ -7,6 +7,7 @@ import Image from "next/image";
 import { gamesFetcher, gamesFetcherKey } from "./fetchers/gamesFetcher";
 import Triangle from "./icons/Triangle";
 import Circle from "./icons/Circle";
+import { BASE_PATH } from "@/next.config.mjs";
 
 const Games = () => {
   const { data, isLoading, error } = useSWR(gamesFetcherKey, gamesFetcher);
@@ -46,7 +47,7 @@ const Games = () => {
                       <div className="text-md col-span-10 flex items-center font-bold">
                         <div className="flex gap-4">
                           <Image
-                            src={`${u.gameName.replaceAll(" ", "")}.webp`}
+                            src={`${BASE_PATH}/${u.gameName.replaceAll(" ", "")}.webp`}
                             height="100"
                             width="100"
                             alt={u.gameName}
@@ -97,7 +98,7 @@ const Games = () => {
                     {g.order}. {g.gameName}
                   </div>
                   <Image
-                    src={`${g.gameName.replaceAll(" ", "")}.webp`}
+                    src={`${BASE_PATH}/${g.gameName.replaceAll(" ", "")}.webp`}
                     height="100"
                     width="100"
                     alt={g.gameName}
