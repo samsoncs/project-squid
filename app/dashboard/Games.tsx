@@ -22,10 +22,7 @@ const Games = () => {
 
             <div className="mb-6 flex flex-col gap-2">
               <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
-                <div className="col-span-2 text-zinc-400 lg:col-span-1">
-                  Order
-                </div>
-                <div className="col-span-8 text-zinc-400">Game</div>
+                <div className="col-span-10 text-zinc-400">Game</div>
                 <div className="col-span-2 flex justify-end text-zinc-400 lg:col-span-3">
                   Squid
                 </div>
@@ -45,12 +42,9 @@ const Games = () => {
                 !error &&
                 data!.upcoming?.map((u, idx) => (
                   <Card key={u.gameName}>
-                    <div className="grid grid-cols-12 px-4 lg:px-5">
-                      <div className="col-span-2 flex items-center justify-start text-3xl font-bold text-zinc-400 lg:col-span-1">
-                        <div>{u.order}</div>
-                      </div>
-                      <div className="text-md col-span-8 flex items-center font-bold">
-                        <div className="flex items-center gap-4">
+                    <div className="grid grid-cols-12">
+                      <div className="text-md col-span-10 flex items-center font-bold">
+                        <div className="flex gap-4">
                           <Image
                             src={`${u.gameName.replaceAll(" ", "")}.webp`}
                             height="100"
@@ -58,10 +52,12 @@ const Games = () => {
                             alt={u.gameName}
                             className="rounded-md"
                           />
-                          {u.gameName}
+                          <div className="mt-2">
+                            {u.order}. {u.gameName}
+                          </div>
                         </div>
                       </div>
-                      <div className="col-span-2 flex justify-end lg:col-span-3">
+                      <div className="col-span-2 flex items-center justify-end">
                         {u.isSquidGame && (
                           <>
                             {idx % 3 === 0 && <Square />}
@@ -82,11 +78,6 @@ const Games = () => {
       </div>
 
       <div className="mb-4 flex flex-col gap-2">
-        <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
-          <div className="col-span-2 text-zinc-400 lg:col-span-1">Order</div>
-          <div className="col-span-10 text-zinc-400 lg:col-span-11">Game</div>
-        </div>
-
         {isLoading && (
           <div className="flex flex-col gap-2">
             <LoadingCard />
@@ -100,14 +91,20 @@ const Games = () => {
           !error &&
           data!.completed?.map((g) => (
             <Card key={g.gameName}>
-              <div className="grid grid-cols-12 px-4 py-1 lg:px-5">
-                <div className="col-span-2 flex items-center justify-start text-3xl font-bold lg:col-span-1">
-                  <div className="text-zinc-400">{g.order}</div>
-                </div>
-                <div className="col-span-10 flex flex-col lg:col-span-11">
-                  <div className="text-md mb-1 font-bold text-zinc-400">
-                    {g.gameName}
+              <div className="flex gap-4 py-1">
+                <div className="flex flex-col gap-2 font-bold">
+                  <div className="text-md">
+                    {g.order}. {g.gameName}
                   </div>
+                  <Image
+                    src={`${g.gameName.replaceAll(" ", "")}.webp`}
+                    height="100"
+                    width="100"
+                    alt={g.gameName}
+                    className="rounded-md"
+                  />
+                </div>
+                <div className="flex flex-col">
                   <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
                     {g.firstPlacePoints && (
                       <>
