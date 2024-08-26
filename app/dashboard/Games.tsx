@@ -90,7 +90,7 @@ const Games = () => {
           data!.completed?.map((g) => (
             <Card key={g.gameName}>
               <div className="grid grid-cols-12 py-1">
-                <div className="col-span-7 flex flex-col font-bold">
+                <div className="col-span-7 flex flex-col gap-2 font-bold">
                   <div className="text-md">
                     {g.order}. {g.gameName}
                   </div>
@@ -102,49 +102,56 @@ const Games = () => {
                     className="rounded-md"
                   />
                 </div>
-                <div className="col-span-5 flex flex-col">
-                  <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
-                    {g.firstPlacePoints && (
-                      <>
-                        <div className="flex gap-2">
-                          <div>
-                            <PlaceMarker place={1} size="sm" />
-                          </div>
-                          <div>
-                            <div className="font-bold">{g.firstPlace}</div>
-                            <div className="text-zinc-400">
-                              {g.firstPlacePoints} pts
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <div>
-                            <PlaceMarker place={2} size="sm" />
-                          </div>
-                          <div>
-                            <div className="font-bold">{g.secondPlace}</div>
-                            <div className="text-zinc-400">
-                              {g.secondPlacePoints} pts
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <div>
-                            <PlaceMarker place={3} size="sm" />
-                          </div>
-                          <div>
-                            <div className="font-bold">{g.thirdPlace}</div>
-                            <div className="text-zinc-400">
-                              {g.thirdPlacePoints} pts
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
 
-                    {!g.firstPlacePoints && <>Squid token used</>}
+                {g.firstPlacePoints && (
+                  <div className="col-span-5 flex flex-col">
+                    <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
+                      {" "}
+                      <div className="flex gap-2">
+                        <div>
+                          <PlaceMarker place={1} size="sm" />
+                        </div>
+                        <div>
+                          <div className="font-bold">{g.firstPlace}</div>
+                          <div className="text-zinc-400">
+                            {g.firstPlacePoints} pts
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div>
+                          <PlaceMarker place={2} size="sm" />
+                        </div>
+                        <div>
+                          <div className="font-bold">{g.secondPlace}</div>
+                          <div className="text-zinc-400">
+                            {g.secondPlacePoints} pts
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div>
+                          <PlaceMarker place={3} size="sm" />
+                        </div>
+                        <div>
+                          <div className="font-bold">{g.thirdPlace}</div>
+                          <div className="text-zinc-400">
+                            {g.thirdPlacePoints} pts
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {!g.firstPlacePoints && (
+                  <div className="col-span-5 flex flex-col">
+                    <div className="text-sm">Squid token used!</div>
+                    <div className="flex h-full items-center justify-center">
+                      <Triangle size="lg" />
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
           ))}
