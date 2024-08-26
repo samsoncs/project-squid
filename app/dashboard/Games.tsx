@@ -22,13 +22,6 @@ const Games = () => {
             </div>
 
             <div className="mb-6 flex flex-col gap-2">
-              <div className="grid grid-cols-12 px-2 text-sm font-bold lg:px-7">
-                <div className="col-span-10 text-zinc-400">Game</div>
-                <div className="col-span-2 flex justify-end text-zinc-400 lg:col-span-3">
-                  Squid
-                </div>
-              </div>
-
               {isLoading && (
                 <div className="flex flex-col gap-2">
                   <LoadingCard />
@@ -43,8 +36,8 @@ const Games = () => {
                 !error &&
                 data!.upcoming?.map((u, idx) => (
                   <Card key={u.gameName}>
-                    <div className="grid grid-cols-12">
-                      <div className="text-md col-span-10 flex items-center font-bold">
+                    <div className="flex flex-col">
+                      <div className="text-md flex items-end">
                         <div className="flex gap-4">
                           <Image
                             src={`${BASE_PATH}/${u.gameName.toLocaleLowerCase().replaceAll(" ", "")}.webp`}
@@ -53,19 +46,22 @@ const Games = () => {
                             alt={u.gameName}
                             className="rounded-md"
                           />
-                          <div className="mt-2">
-                            {u.order}. {u.gameName}
+                          <div className="mt-2 flex flex-col gap-2">
+                            <div className="font-bold">
+                              {u.order}. {u.gameName}
+                            </div>
+                            {u.isSquidGame && (
+                              <div className="flex items-center gap-3">
+                                {idx % 3 === 0 && <Square />}
+                                {(idx + 2) % 3 === 0 && <Circle />}
+                                {(idx + 1) % 3 === 0 && <Triangle />}
+                                <div className="text-sm text-zinc-400">
+                                  Squid token up for grabs!
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
-                      </div>
-                      <div className="col-span-2 flex items-center justify-end">
-                        {u.isSquidGame && (
-                          <>
-                            {idx % 3 === 0 && <Square />}
-                            {(idx + 2) % 3 === 0 && <Circle />}
-                            {(idx + 1) % 3 === 0 && <Triangle />}
-                          </>
-                        )}
                       </div>
                     </div>
                   </Card>
