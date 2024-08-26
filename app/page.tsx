@@ -160,7 +160,7 @@ const DateSegment: React.FC<{ interval?: number; description: string }> = ({
 );
 
 const Index = () => {
-  const launchDate = new Date(2024, 8, 14);
+  const launchDate = new Date(2024, 8, 14, 9, 0, 0);
   const [timeToLaunch, setTimeToLaunch] = useState(
     intervalToDuration({ start: new Date(), end: launchDate }),
   );
