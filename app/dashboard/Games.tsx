@@ -8,6 +8,7 @@ import { gamesFetcher, gamesFetcherKey } from "./fetchers/gamesFetcher";
 import Triangle from "./icons/Triangle";
 import Circle from "./icons/Circle";
 import { BASE_PATH } from "@/next.config.mjs";
+import PlaceMarker from "./icons/PlaceMarker";
 
 const Games = () => {
   const { data, isLoading, error } = useSWR(gamesFetcherKey, gamesFetcher);
@@ -105,42 +106,37 @@ const Games = () => {
                   <div className="flex flex-col gap-2 pt-2 text-sm text-zinc-100">
                     {g.firstPlacePoints && (
                       <>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-10 font-bold text-primary-500">
-                              1st
-                            </div>
-                            <div className="h-3 w-32 rounded-md bg-primary-500" />
+                        <div className="flex gap-2">
+                          <div>
+                            <PlaceMarker place={1} size="sm" />
                           </div>
-                          <div className="flex gap-2">
-                            <div className="w-10">{g.firstPlacePoints} pts</div>
-                            <div>{g.firstPlace}</div>
+                          <div>
+                            <div className="font-bold">{g.firstPlace}</div>
+                            <div className="text-zinc-400">
+                              {g.firstPlacePoints} pts
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-10 font-bold text-secondary-500">
-                              2nd
-                            </div>
-                            <div className="h-3 w-20 rounded-md bg-secondary-500" />
+                        <div className="flex gap-2">
+                          <div>
+                            <PlaceMarker place={2} size="sm" />
                           </div>
-                          <div className="flex gap-2">
-                            <div className="w-10">
+                          <div>
+                            <div className="font-bold">{g.secondPlace}</div>
+                            <div className="text-zinc-400">
                               {g.secondPlacePoints} pts
                             </div>
-                            <div>{g.secondPlace}</div>
                           </div>
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-10 font-bold text-zinc-400">
-                              3rd
-                            </div>
-                            <div className="h-3 w-5 rounded-md bg-zinc-400" />
+                        <div className="flex gap-2">
+                          <div>
+                            <PlaceMarker place={3} size="sm" />
                           </div>
-                          <div className="flex gap-2">
-                            <div className="w-10">{g.thirdPlacePoints} pts</div>
-                            <div>{g.thirdPlace}</div>
+                          <div>
+                            <div className="font-bold">{g.thirdPlace}</div>
+                            <div className="text-zinc-400">
+                              {g.thirdPlacePoints} pts
+                            </div>
                           </div>
                         </div>
                       </>
