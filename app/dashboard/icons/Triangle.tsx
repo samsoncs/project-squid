@@ -1,6 +1,10 @@
-const Triangle = () => (
+interface Props {
+  size?: "lg";
+}
+
+const Triangle: React.FC<Props> = ({ size }) => (
   <svg
-    className="h-5 w-5 stroke-primary-500"
+    className={`${size === "lg" ? "h-24 w-24" : "h-5 w-5"} stroke-primary-500`}
     width="52"
     height="46"
     viewBox="0 0 52 46"

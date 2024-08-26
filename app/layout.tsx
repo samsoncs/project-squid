@@ -54,7 +54,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-zinc-900 text-foreground text-zinc-100">
         {pathname !== "/" && (
-          <nav className="mb-2 flex w-full bg-zinc-900 px-2 py-1">
+          <nav className="mb-2 flex w-full bg-zinc-900 px-2 py-2">
             <div className="mx-auto w-full max-w-screen-xl">
               <div className="flex items-center">
                 <div>
