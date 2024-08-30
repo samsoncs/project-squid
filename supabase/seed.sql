@@ -25,8 +25,9 @@ values
 (7, 'Squid Grid', false),
 (8, 'Battle Squid', false),
 (9, 'Rock, Paper, Squidsor', false),
-(10, 'Wiener Schwung!', false),
-(11, 'The Secret Frontman ', false);
+(10, 'SquidFlix', false),
+(11, 'Wiener Schwung!', false),
+(12, 'The Secret Frontman ', false);
 
 insert into starting_tokens(token_type)
 values
