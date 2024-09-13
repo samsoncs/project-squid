@@ -11,6 +11,8 @@ import Link from "next/link";
 import { AuthContext } from "@/components/utils/AuthContext";
 import Image from "next/image";
 import { BASE_PATH } from "../next.config.mjs";
+import { intervalToDuration } from "date-fns";
+import Countdown from "./Countdown";
 
 const supabase = createClient();
 
@@ -38,12 +40,33 @@ export default function RootLayout({
     return () => subscription.unsubscribe();
   }, []);
 
+  const launchDate = new Date(2024, 8, 14, 10, 0, 0);
+  const [timeToLaunch, setTimeToLaunch] = useState(
+    intervalToDuration({ start: new Date(), end: launchDate }),
+  );
+  const refresher = setInterval(() => {
+    setTimeToLaunch(intervalToDuration({ start: new Date(), end: launchDate }));
+  }, 1000);
+
+  if (timeToLaunch.days && timeToLaunch.days < 1) {
+    clearInterval(refresher);
+  }
+
+  const daysToLaunch = timeToLaunch.days ?? 0;
+  const hoursToLaunch = timeToLaunch.hours ?? 0;
+  const isLaunched = daysToLaunch <= 0 && hoursToLaunch <= 0;
+
   if (!isLoading && !session) {
     if (!pathname.endsWith("login") && pathname !== "/") {
       return (
         <html lang="en" className={GeistSans.className}>
           <body className="flex items-center justify-center bg-zinc-900 pt-10 text-foreground text-zinc-100">
-            <Login />
+            {isLaunched && <Login />}
+            {!isLaunched && (
+              <div className="flex h-screen flex-col items-center justify-center">
+                <Countdown timeToLaunch={timeToLaunch} />
+              </div>
+            )}
           </body>
         </html>
       );
