@@ -1,11 +1,7 @@
 "use client";
 
-import { time } from "console";
-import { Duration, intervalToDuration } from "date-fns";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { SetStateAction, useState } from "react";
-import Countdown from "./Countdown";
 
 const AnimatedCircle = () => (
   <svg
@@ -75,55 +71,35 @@ const AnimatedSquare = () => (
 );
 
 const Index = () => {
-  const launchDate = new Date(2024, 8, 14, 10, 0, 0);
-  const [timeToLaunch, setTimeToLaunch] = useState(
-    intervalToDuration({ start: new Date(), end: launchDate }),
-  );
-  const refresher = setInterval(() => {
-    setTimeToLaunch(intervalToDuration({ start: new Date(), end: launchDate }));
-  }, 1000);
-
-  if (timeToLaunch.days && timeToLaunch.days < 1) {
-    clearInterval(refresher);
-  }
-
-  const daysToLaunch = timeToLaunch.days ?? 0;
-  const hoursToLaunch = timeToLaunch.hours ?? 0;
-  const isLaunched = daysToLaunch <= 0 && hoursToLaunch <= 0;
-
   return (
     <div className="flex h-screen flex-col items-center justify-center">
-      {!isLaunched && <Countdown timeToLaunch={timeToLaunch} />}
-
-      {isLaunched && (
-        <>
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="mb-2 text-2xl font-bold text-zinc-400"
+      <>
+        <motion.h1
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="mb-2 text-2xl font-bold text-zinc-400"
+        >
+          Do you dare to play?
+        </motion.h1>
+        <div className="mb-6 flex justify-between gap-2 pb-2">
+          <AnimatedCircle />
+          <AnimatedTriangle />
+          <AnimatedSquare />
+        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        >
+          <Link
+            className="rounded-md bg-primary-600 p-4 text-lg"
+            href="/dashboard"
           >
-            Do you dare to play?
-          </motion.h1>
-          <div className="mb-6 flex justify-between gap-2 pb-2">
-            <AnimatedCircle />
-            <AnimatedTriangle />
-            <AnimatedSquare />
-          </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            <Link
-              className="rounded-md bg-primary-600 p-4 text-lg"
-              href="/dashboard"
-            >
-              Enter
-            </Link>
-          </motion.div>
-        </>
-      )}
+            Enter
+          </Link>
+        </motion.div>
+      </>
     </div>
   );
 };
